@@ -9,14 +9,14 @@ The notable results in this repository are:
 - **Theorem 4.19:** `BAut1 A` is a coherent H-space whenever `A` is central (see `hspace_twisted_baut`  and `iscoherent_hspace_twisted_baut1` in [`BAut1.v`](./BAut1.v))
 - Part of **Corollary 4.20:** `BAut1 A` is central whenever `A` is central (see `central_pbaut` in [`Central.v`](./Central.v))
 
-This version has been tested with Coq 8.16.1 against commit 832aef3e of HoTT-Coq from May 2, 2023.
+This version has been tested with Coq 8.16.1 and Coq 8.17.0 against commit 832aef3e of Coq-HoTT from May 2, 2023.
 
 You will need to create a `_CoqProject` file to build this project.
 If you have a local build of Coq-HoTT, you can use the below after filling in the link to your local build.
 
 ```
 -docroot .
--R <link to local Coq-HoTT build>
+-R <path to local Coq-HoTT build> HoTT
 -R . Top
 -arg -noinit
 -arg -indices-matter
