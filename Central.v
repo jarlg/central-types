@@ -5,9 +5,6 @@ From HoTT Require Import Basics Types Pointed Truncations
 
 Require Import WildCatLemmas Lemmas HSpace Cover SelfMaps BAut1 Smallness misc.
 
-(** There's a typeclass cycle created by the two instances [ishspace_homogeneous] and [ishomogeneous_hspace]. Only one can be an instance. *)
-#[local] Remove Hints ishspace_homogeneous : typeclass_instances.
-
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 Local Open Scope trunc_scope.
