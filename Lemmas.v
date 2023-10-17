@@ -341,18 +341,6 @@ Proof.
   exact e^-1%equiv.
 Defined.
 
-Global Instance hasmorext_core_ptype `{Funext} : HasMorExt (core pType).
-Proof.
-  snrapply Build_HasMorExt.
-  intros a b f g.
-  unfold GpdHom_path.
-  cbn in f, g.
-  (* [GpdHom_path] and the inverse of [equiv_path_pequiv] are not definitionally equal, but they compute to definitionally equal things on [idpath]. *)
-  apply (isequiv_homotopic (equiv_path_pequiv f g)^-1%equiv).
-  intro p; induction p; cbn.
-  reflexivity.
-Defined.
-
 (* Put in PathAny.v, right after [equiv_path_from_contr].  (Also, the last line of the proof of equiv_path_from_contr can be replaced with "rapply isequiv_contr_contr." and the comment can be deleted.) *)
 Definition equiv_path_from_contr_center {A : Type} (P : A -> Type)
            (cp : Contr {y:A & P y} )

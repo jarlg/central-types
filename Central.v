@@ -3,7 +3,7 @@ From HoTT Require Import Basics Types Pointed Truncations
   WhiteheadsPrinciple WildCat PathAny
   Modalities.ReflectiveSubuniverse Modalities.Separated.
 
-Require Import WildCatLemmas Lemmas HSpace Cover SelfMaps BAut1 Smallness misc.
+Require Import Lemmas HSpace Cover SelfMaps BAut1 Smallness misc.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
