@@ -315,7 +315,7 @@ Proof.
   unfold conn_point_elim.
   unfold isconnected_paths.  (* Invisible to the user; see with Set Printing Implicit. *)
   simpl.
-  unfold contr.
+  unfold path_contr.
   rewrite concat_Vp.
   reflexivity.
 Defined.

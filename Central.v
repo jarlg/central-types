@@ -242,7 +242,7 @@ Section UniqueDelooping.
     : e == pequiv_loops_baut1 o fmap loops delooping_pto_baut1.
   Proof.
     intro q; symmetry.
-    simpl. (* TODO: slow.  (But faster than cbn.) *)
+    simpl.
     rewrite inv_V, 2 pr1_path_pp, 2 transport_pp.
     refine (ap _ _ @ _).
     { refine (ap _ (pointed_tensor_trivial_comp _) @ _).
@@ -351,7 +351,6 @@ Proof.
     nrapply pmap_postwhisker.
     nrefine (pmap_postwhisker _ _ @* _).
     1: { refine (emap_compose loops@{v} _ _ @* _).  (* Cumulativity is used here. *)
-         refine (compose_cate_fun _ _ @* _).
          exact (pmap_prewhisker _ (emap_inv loops es)^*). }
     exact (compose_h_Vh _ _).
 Defined.
@@ -378,7 +377,7 @@ Definition loops_functor_pbaut1@{u v w | u < v, v < w} `{Univalence}
   : (B <~>* pBAut1@{u v} A) -> (loops B <~>* A).
 Proof.
   refine (_ o emap loops).
-  exact (equiv_postcompose_core_cat_equiv@{w v v v v u} pequiv_loops_baut1).
+  exact (equiv_postcompose_core_cat_equiv@{w v v v w u v} pequiv_loops_baut1).
 Defined.
 
 (** To do this, we show that on total spaces, it is a map between contractible types.  The codomain is done in [unique_delooping_central], so we handle the domain now. *)
@@ -390,7 +389,7 @@ Proof.
   refine (equiv_functor_sigma_id _); intros B.
   refine (_ oE (equiv_path_sigma_hprop _ _)^-1); unfold ".1".
   refine (_ oE equiv_pequiv_path _ _).
-  exact (equiv_postcompose_core_cat_equiv@{w v v v v u} (pequiv_spbaut1_pbaut1 A)).
+  exact (equiv_postcompose_core_cat_equiv@{w v v v w u v} (pequiv_spbaut1_pbaut1 A)).
 Defined.
 
 Global Instance isequiv_loops_functor_pbaut1@{u v w | u < v, v < w} `{Univalence}
@@ -413,10 +412,10 @@ Definition unique_delooping_self_equivalences_central@{u v w +} `{Univalence}
   {A : pType@{u}} `{Central@{u} A}
   : (pBAut1 A <~>* pBAut1 A) <~> (A <~>* A).
 Proof.
-  refine (_ oE (equiv_precompose_core_cat_equiv@{w v v v v v} (pequiv_spbaut1_pbaut1 A))).
+  refine (_ oE (equiv_precompose_core_cat_equiv@{w v v v w v v} (pequiv_spbaut1_pbaut1 A))).
   srefine (_ oE equiv_loops_functor_pbaut1@{u v w} _ (spBAut1 A;_)).
   2: exact (isconnected_equiv' 0 _ (pequiv_spbaut1_pbaut1 A)^-1 _).
-  refine (equiv_precompose_core_cat_equiv@{w v v v v v} _).
+  refine (equiv_precompose_core_cat_equiv@{w v v v w v v} _).
   symmetry; apply pequiv_loops_spbaut1.
 Defined.
 
