@@ -25,6 +25,7 @@ If you have a local build of Coq-HoTT, you can use the below after filling in th
 -arg -indices-matter
 -arg -native-compiler -arg no
 
+Bands.v
 BAut1.v
 Central.v
 Conn.v
