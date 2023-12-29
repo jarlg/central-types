@@ -50,9 +50,9 @@ Global Instance iscoherent_baut1_central `{Univalence} {A : pType} `{Central A}
 
 (** Coq knows that the H-space structure is left and right invertible. *)
 
-(** TODO: Characterization of central types. *)
+(** TODO: Finish characterization of central types. *)
 
-(** Lemma 3.5 is already [equiv_hfiber_ev1] in SelfMaps. We use this to show that a connected H-space is central if the pointed self-equivalences form a set. *)
+(** Lemma 3.5 is [equiv_hfiber_ev1] in SelfMaps. We use this to prove (most of) Lemma 3.6, which gives several characterizations of central types.  We begin by showing that a connected H-space is central if the pointed self-equivalences form a set, which is (3) => (1) in Lemma 3.6. *)
 Proposition central_connected_hspace_pequiv_set `{Univalence} {A : pType}
   `{IsConnected 0 A, IsHSpace A, IsHSet (A <~>* A)}
   : Central A.
@@ -64,17 +64,70 @@ Proof.
   apply (contr_equiv _ (pequiv_pcomp_pequiv_to_pmap pequiv_pmap_idmap)).
 Defined.
 
-(** This is the converse. *)
-Proposition pequiv_set_central `{Univalence} {A : pType} `{Central A}
-  : IsHSet (A <~>* A).
+(** This is (1) => (2) in Lemma 3.6. *)
+Proposition pmap_set_central `{Univalence} {A : pType} `{Central A}
+  : IsHSet (A ->* A).
 Proof.
   rapply ishset_contr_comp.
   intro phi.
-  refine (contr_equiv _ (pequiv_pcomp_pequiv_to_pmap phi)^-1).
   rapply (contr_equiv' (comp (A ->* A) (tr pmap_idmap))).
   { unshelve rapply (pequiv_comp_hspace (A ->** A)).
     apply cohhspace_central. }
   rapply (contr_equiv' _ equiv_hfiber_ev1).
+Defined.
+
+(* todo: Put in Pointed/Core.v *)
+Global Instance isembedding_pointed_equiv_fun `{Funext} (X Y : pType)
+  : IsEmbedding (pointed_equiv_fun X Y).
+Proof.
+  (* After precomposing with [issig_pequiv X Y], we need to show that [pr1] is a (-1)-truncated map, which is handled by [mapinO_pr1]. *)
+  srefine (cancelR_equiv_mapinO (Tr (-1)) (issig_pequiv X Y) _).
+Defined.
+
+(** This is (2) => (3) in Lemma 3.6. *)
+Proposition pequiv_hset_pequiv_pmap `{Funext} {A : pType} `{IsHSet (A ->* A)}
+  : IsHSet (A <~>* A).
+Proof.
+  rapply (istrunc_embedding_trunc (pointed_equiv_fun A A)).
+Defined.
+
+(** This is (1) => (3) in Lemma 3.6. *)
+Proposition pequiv_set_central `{Univalence} {A : pType} `{Central A}
+  : IsHSet (A <~>* A).
+Proof.
+  nrapply pequiv_hset_pequiv_pmap.
+  rapply pmap_set_central.
+Defined.
+
+(** This is (4) => (2) in Lemma 3.6, except that we do not assume that [A] is coherent.  We use [iscohhspace_hspace] to upgrade the H-space structure. *)
+Proposition pmap_set_connected_hspace_contr_pmap_loops `{Univalence} {A : pType}
+  `{IsConnected 0 A, IsHSpace A} {C : Contr (A ->* loops A)}
+  : IsHSet (A ->* A).
+Proof.
+  (* It's enough to show that the loop spaces are contractible: *)
+  apply (equiv_istrunc_istrunc_loops (-2) _)^-1.
+  intro phi.
+  nrapply istrunc_succ.
+  (* Since [A ->* A] is homogeneous, it's enough to check this for [phi] the constant map.  Here we use that [A ->* A] is again a left-invertible H-space, which requires coherence.  We could alternatively refactor this through [A ->* A] being homogeneous, which shouldn't need coherence.  In any case, we simply upgrade the H-space structure to a coherent one. *)
+  rapply (contr_equiv' (loops [A ->* A, pconst])).
+  { rapply (emap loops).
+    rapply ishomogeneous.
+    unshelve rapply ishomogeneous_hspace.
+    rapply iscohhspace_hspace. }
+  (* We show that this loop space is equivalent to the given contractible type: *)
+  refine (@contr_equiv' _ _ _ C).
+  symmetry.
+  exact (equiv_loops_ppforall (fun a : A => A)).
+Defined.
+
+(** Therefore, (4) => (1). *)
+Proposition central_connected_hspace_contr_pmap_loops `{Univalence} {A : pType}
+  `{IsConnected 0 A, IsHSpace A} {C : Contr (A ->* loops A)}
+  : Central A.
+Proof.
+  rapply central_connected_hspace_pequiv_set.
+  nrapply pequiv_hset_pequiv_pmap.
+  apply pmap_set_connected_hspace_contr_pmap_loops.
 Defined.
 
 (** (Prop. 3.12) All evaluation fibrations of self-maps of a central type are equivalences. *)
