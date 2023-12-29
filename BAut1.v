@@ -16,6 +16,8 @@ Definition BAut1@{u v | u < v} (A : Type@{u}) : Type@{v}
 (** It sometimes helps reduce universes to use this in place of [pr1]. *)
 Definition baut1_pr1@{u v} {A : Type@{u}} : BAut1@{u v} A -> Type@{u} := pr1.
 
+Coercion baut1_pr1 : BAut1 >-> Sortclass.
+
 Global Instance ispointed_baut1 {A : Type} : IsPointed (BAut1 A)
     := (A; idpath).
 

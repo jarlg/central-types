@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types HFiber
-  Truncations.Core Pointed.Core Pointed.pEquiv Homotopy.HSpace.Core Homotopy.Cover WildCat.Core.
+  Truncations.Core Pointed.Core Pointed.pEquiv Homotopy.HSpace.Core Homotopy.Cover WildCat.
 
 Require Import Lemmas HSpace SelfMaps Cover BAut1.
 
@@ -72,7 +72,7 @@ Section Central.
     (** It works to do [destruct p; reflexivity.], but later we need the proof to compute like below. *)
     rapply path_universe_uncurried@{u u v}.
     snrapply equiv_functor_sigma'.
-    1: exact (equiv_precompose_equiv' ((equiv_path@{u v} _ _) (ap baut1_pr1 p^))).
+    1: exact (equiv_precompose_core_cat_equiv (A:=Type) ((equiv_path@{u v} _ _) (ap baut1_pr1 p^))).
     intro e; lazy beta.
     induction p.
     rapply equiv_concat_l.
@@ -180,16 +180,17 @@ Section Central.
     nrapply eisretr.
   Defined.
 
-  (** The negation map lets us move between path components of [(A <~> A)]. *)
-  Definition neg_precompose
+  (** The negation map lets us move between path components of [(A <~> A)]. We define it in two steps to get rid of three universe variables. *)
+  Definition neg_precompose'
     : pcomp (A <~> A) 1%equiv <~>* pcomp (A <~> A) neg.
   Proof.
     srapply (pequiv_pfunctor_pcomp@{u v}
                (X:=[A<~>A, equiv_idmap]) (Y:=[A<~>A, neg])).
     srapply Build_pEquiv'.
-    1: exact (equiv_precompose_equiv' neg).
+    1: exact (equiv_precompose_core_cat_equiv (A:=Type) neg).
     by apply path_equiv.
   Defined.
+  Definition neg_precompose@{w} := Eval unfold neg_precompose' in neg_precompose'@{w v u u}.
 
   (** Thus we get an equivalence [pcomp (A<~>A) negation <~> A]. *)
   Definition equiv_ev_neg : pcomp (A<~>A) neg <~>* A
