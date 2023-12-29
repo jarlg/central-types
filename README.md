@@ -5,8 +5,10 @@ This repository contains work in progress on formalizing results from the paper 
 Some results from that paper, mostly related to H-spaces (e.g., Proposition 2.2 and Theorem 2.27), have been merged into the [Coq-HoTT library](https://github.com/HoTT/Coq-HoTT) under the `Homotopy.HSpace` namespace.
 The notable results in this repository are:
 
-- Most of **Proposition 3.6:** The characterization of central types.
-- **Example 3.8:** Eilenberg-Mac Lane spaces are central.
+- Most of **Proposition 3.6:** The characterization of central types
+  (search for "3.6" in [`Central.v`](./Central.v))
+- **Example 3.8:** Eilenberg-Mac Lane spaces are central
+  (see `central_em` in [`EMSpace.v`](./EMSpace.v))
 - **Theorem 4.6:** `BAut1 A` is the unique delooping of a central type `A` (see `unique_delooping_central` in [`Central.v`](./Central.v))
 - **Theorem 4.19:** `BAut1 A` is a coherent H-space whenever `A` is central (see `hspace_twisted_baut`  and `iscoherent_hspace_twisted_baut1` in [`BAut1.v`](./BAut1.v))
 - Part of **Corollary 4.20:** `BAut1 A` is central whenever `A` is central (see `central_pbaut` in [`Central.v`](./Central.v))
@@ -35,6 +37,7 @@ BAut1.v
 Central.v
 Conn.v
 Cover.v
+EMspace.v
 Lemmas.v
 misc.v
 SelfMaps.v
