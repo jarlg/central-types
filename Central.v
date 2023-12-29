@@ -1,4 +1,4 @@
-From HoTT Require Import Basics Types Pointed Truncations
+From HoTT Require Import Basics Types Pointed.Core Pointed.Loops Pointed.pEquiv Truncations
   Homotopy.HSpace Homotopy.Cover Homotopy.EvaluationFibration
   WhiteheadsPrinciple WildCat PathAny
   Modalities.ReflectiveSubuniverse Modalities.Separated.
