@@ -23,10 +23,6 @@ Proof.
   apply contr_inhabited_hprop.
   2: exact pconst.
   rapply (istrunc_pmap (m:=n.-1) (n:=-2)).
-  change (IsTrunc (n.-1).+1 (loops K( A, n.+1))).
-  rewrite trunc_index_succ_pred.
-  apply istrunc_loops.
-  apply (@istrunc_em A n.+1).
 Defined.
 
 Definition pbaut1_deloop_em `{Univalence} (A : AbGroup) (n : nat)

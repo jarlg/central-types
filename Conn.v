@@ -18,11 +18,11 @@ Definition isconnected_isconnected_paths_merely `{Univalence} {n : trunc_index}
 Proof.
   unfold IsConnected.
   strip_truncations.
-  exists (tr ma).
+  apply (Build_Contr _ (tr ma)).
   intro y.
   strip_truncations.
   apply (equiv_path_Tr _ _).
-  apply p.
+  apply center, p.
 Defined.
 
 (** This is a converse to [isconnected_paths] in the pointed case. *)
@@ -32,11 +32,11 @@ Definition isconnected_isconnected_paths_pointed `{Univalence} {n : trunc_index}
   : IsConnected n.+1 A.
 Proof.
   (** This follows from the previous result, but it's easier to just adjust the proof. *)
-  exists (tr (point A)).
+  apply (Build_Contr _ (tr (point A))).
   intro y.
   strip_truncations.
   apply (equiv_path_Tr _ _).
-  apply p.
+  apply center, p.
 Defined.
 
 (** This is a converse to [isconnected_loops] in the pointed, 0-connected case. *)
@@ -57,7 +57,7 @@ Proof.
   unfold IsConnMap.
   intro b.
   snrapply (isconnected_isconnected_paths_merely (hfiber f b)).
-  1: apply S.
+  1: apply center, S.
   intros [x p] [y q].
   induction q.
   nrapply isconnected_equiv'.

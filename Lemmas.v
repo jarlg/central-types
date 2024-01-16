@@ -163,7 +163,7 @@ Proof.
   2: { snrefine (equiv_fiber_precompose _ _ _ oE _).
        2: exact (equiv_prod_symm _ _ oE equiv_sigma_prod0 _ _).
        rapply hfiber_fibration. }
-  exact H.
+  assumption.
 Defined.
 
 
@@ -313,10 +313,7 @@ Definition conn_point_elim_beta `{Univalence} (n : trunc_index) {A : pType@{u}} 
   : conn_point_elim n P p0 (point A) = p0.
 Proof.
   unfold conn_point_elim.
-  unfold isconnected_paths.  (* Invisible to the user; see with Set Printing Implicit. *)
-  simpl.
-  unfold path_contr.
-  rewrite concat_Vp.
+  rewrite (contr (A:=Tr n (pt = pt)) (tr 1)).
   reflexivity.
 Defined.
 

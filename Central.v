@@ -483,5 +483,5 @@ Proof.
   rapply central_connected_hspace_pequiv_set.
   nrapply (istrunc_equiv_istrunc (A <~>* A)).
   - symmetry; apply unique_delooping_self_equivalences_central.
-  - nrapply pequiv_set_central; assumption.
+  - nrapply pequiv_set_central@{u v}; assumption.
 Defined.

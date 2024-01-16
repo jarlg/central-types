@@ -13,7 +13,7 @@ The notable results in this repository are:
 - **Theorem 4.19:** `BAut1 A` is a coherent H-space whenever `A` is central (see `hspace_twisted_baut`  and `iscoherent_hspace_twisted_baut1` in [`BAut1.v`](./BAut1.v))
 - Part of **Corollary 4.20:** `BAut1 A` is central whenever `A` is central (see `central_pbaut` in [`Central.v`](./Central.v))
 
-The current version from Dec 29, 2023 has been tested with Coq 8.18.0 against commit 6ad532f7 of Coq-HoTT from Dec 29, 2023.
+Version 0fde1817 from Dec 29, 2023 has been tested with Coq 8.18.0 against commit 6ad532f7 of Coq-HoTT from Dec 29, 2023.
 The first two results in the list above were recently added to this repo.
 
 Version 1b44982f from Oct 17, 2023 has been tested with Coq 8.18.0 against commit 687e370c of Coq-HoTT from Oct 17, 2023.
