@@ -329,7 +329,7 @@ Proof.
 Defined.
 
 (** A variant in which [loops A] is only assumed to be equivalent to an n-connected type. *)
-Global Instance isconnected_isconnected_loops' `{Univalence} {n : trunc_index} {A B : pType}
+Definition isconnected_isconnected_loops' `{Univalence} {n : trunc_index} {A B : pType}
   `{IsConnected n A, IsConnected 0%nat B} (e : loops B <~> A)
   : IsConnected n.+1 B.
 Proof.

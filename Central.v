@@ -1,4 +1,4 @@
-From HoTT Require Import Basics Types Pointed.Core Pointed.Loops Pointed.pEquiv Truncations
+From HoTT Require Import Basics Types Pointed Truncations
   Homotopy.HSpace Homotopy.Cover Homotopy.EvaluationFibration
   WhiteheadsPrinciple WildCat PathAny
   Modalities.ReflectiveSubuniverse Modalities.Separated.
@@ -99,35 +99,34 @@ Proof.
   rapply pmap_set_central.
 Defined.
 
-(** This is (4) => (2) in Lemma 3.6, except that we do not assume that [A] is coherent.  We use [iscohhspace_hspace] to upgrade the H-space structure. *)
-Proposition pmap_set_connected_hspace_contr_pmap_loops `{Univalence} {A : pType}
-  `{IsConnected 0 A, IsHSpace A} {C : Contr (A ->* loops A)}
+(** This is (4) => (2) in Lemma 3.6, except that we do not assume that [A] is coherent.  We use [iscohhspace_hspace] to upgrade the H-space structure. Note that saying that a pointed mapping space is an h-prop is equivalent to saying that it is contractible. *)
+Proposition pmap_set_connected_hspace_hprop_pmap_loops `{Univalence} {A : pType}
+  `{IsConnected 0 A, IsHSpace A} {HP : IsHProp (A ->* loops A)}
   : IsHSet (A ->* A).
 Proof.
-  (* It's enough to show that the loop spaces are contractible: *)
+  (* It's enough to show that the loop spaces are h-props: *)
   apply (equiv_istrunc_istrunc_loops (-2) _)^-1.
   intro phi.
-  nrapply istrunc_succ.
   (* Since [A ->* A] is homogeneous, it's enough to check this for [phi] the constant map.  Here we use that [A ->* A] is again a left-invertible H-space, which requires coherence.  We could alternatively refactor this through [A ->* A] being homogeneous, which shouldn't need coherence.  In any case, we simply upgrade the H-space structure to a coherent one. *)
-  rapply (contr_equiv' (loops [A ->* A, pconst])).
+  rapply (istrunc_equiv_istrunc (loops [A ->* A, pconst])).
   { rapply (emap loops).
     rapply ishomogeneous.
     unshelve rapply ishomogeneous_hspace.
     rapply iscohhspace_hspace. }
-  (* We show that this loop space is equivalent to the given contractible type: *)
-  refine (@contr_equiv' _ _ _ C).
+  (* We show that this loop space is equivalent to the type we know is an h-prop: *)
+  refine (@istrunc_equiv_istrunc _ _ _ _ HP).
   symmetry.
   exact (equiv_loops_ppforall (fun a : A => A)).
 Defined.
 
 (** Therefore, (4) => (1). *)
-Proposition central_connected_hspace_contr_pmap_loops `{Univalence} {A : pType}
-  `{IsConnected 0 A, IsHSpace A} {C : Contr (A ->* loops A)}
+Proposition central_connected_hspace_hprop_pmap_loops `{Univalence} {A : pType}
+  `{IsConnected 0 A, IsHSpace A} {C : IsHProp (A ->* loops A)}
   : Central A.
 Proof.
   rapply central_connected_hspace_pequiv_set.
   nrapply pequiv_hset_pequiv_pmap.
-  apply pmap_set_connected_hspace_contr_pmap_loops.
+  apply pmap_set_connected_hspace_hprop_pmap_loops.
 Defined.
 
 (** (Prop. 3.12) All evaluation fibrations of self-maps of a central type are equivalences. *)

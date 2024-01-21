@@ -2,7 +2,7 @@
 
 This repository contains work in progress on formalizing results from the paper [Central H-spaces and banded types](https://arxiv.org/abs/2301.02636) by Ulrik Buchholtz, Dan Christensen, Jarl G. Taxerås Flaten, and Egbert Rijke.
 
-Some results from that paper, mostly related to H-spaces (e.g., Proposition 2.2 and Theorem 2.27), have been merged into the [Coq-HoTT library](https://github.com/HoTT/Coq-HoTT) under the `Homotopy.HSpace` namespace.
+Some results from that paper, mostly related to H-spaces (e.g., Proposition 2.2, Proposition 2.19, Corollary 2.20 and Theorem 2.27), have been merged into the [Coq-HoTT library](https://github.com/HoTT/Coq-HoTT) under the `Homotopy.HSpace` namespace.
 The notable results in this repository are:
 
 - Most of **Proposition 3.6:** The characterization of central types
@@ -13,8 +13,10 @@ The notable results in this repository are:
 - **Theorem 4.19:** `BAut1 A` is a coherent H-space whenever `A` is central (see `hspace_twisted_baut`  and `iscoherent_hspace_twisted_baut1` in [`BAut1.v`](./BAut1.v))
 - Part of **Corollary 4.20:** `BAut1 A` is central whenever `A` is central (see `central_pbaut` in [`Central.v`](./Central.v))
 
+The current version from Jan 21, 2024 has been tested with Coq 8.18.0 against commit ce3af423 of Coq-HoTT from Jan 21, 2024.
+
 Version 0fde1817 from Dec 29, 2023 has been tested with Coq 8.18.0 against commit 6ad532f7 of Coq-HoTT from Dec 29, 2023.
-The first two results in the list above were recently added to this repo.
+The first two results in the list above were added to this repo before this.
 
 Version 1b44982f from Oct 17, 2023 has been tested with Coq 8.18.0 against commit 687e370c of Coq-HoTT from Oct 17, 2023.
 Some things that were formerly in this repository have been merged into Coq-HoTT.
