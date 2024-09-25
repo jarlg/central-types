@@ -46,7 +46,7 @@ Proof.
 Defined.
 
 (** It follows that if [X] is pointed, connected and locally small, then it is small. *)
-Definition small_pointed_connected_locally_small@{i j k u | i < k, j <= k, k < u} `{Univalence}
+Definition issmall_pointed_connected_islocallysmall@{i j k u | i < k, j <= k, k < u} `{Univalence}
   (X : pType@{j}) `{IsConnected 0 X} (ls : IsLocallySmall@{i j k} 1 X)
   : IsSmall@{i j} X.
 Proof.
@@ -55,11 +55,11 @@ Proof.
 Defined.
 
 (** If a pointed, connected type has a small loop space, then it is small. *)
-Definition small_loops_small@{i j k u| i < k, j <= k, k < u} `{Univalence}
+Definition issmall_issmall_loops@{i j k u| i < k, j <= k, k < u} `{Univalence}
   {B : pType@{j}} `{IsConnected 0 B} (islB : IsSmall@{i j} (loops B))
   : IsSmall@{i j} B.
 Proof.
-  nrapply small_pointed_connected_locally_small@{i j k u}.
+  nrapply issmall_pointed_connected_islocallysmall@{i j k u}.
   1: assumption.
   intros b0.
   nrapply (conn_point_elim@{k u} (-1)); [assumption | exact _ |].
@@ -94,7 +94,7 @@ Proof.
 Defined.
 
 (* If [f : X -> Y] is (n+1)-truncated and [Y] is (n+2)-locally small, then [X] is (n+2)-locally small.  This is Lemma 2.4 from the paper. When [n] is -2, it says that a subtype of a small type is small. *)
-Definition islocally_small_truncmap@{i j k u | i < k, j <= k, k <= u, j < u} `{PropResizing}
+Definition islocallysmall_truncmap@{i j k u | i < k, j <= k, k <= u, j < u} `{PropResizing}
            (n : trunc_index) {X : Type@{j}} {Y : Type@{j}}
            (f : X -> Y) (T : IsTruncMap n.+1 f) (ls : IsLocallySmall@{i j k} (trunc_index_to_nat n) Y)
   : IsLocallySmall@{i j k} (trunc_index_to_nat n) X.
@@ -120,11 +120,11 @@ Proof.
   apply (issmall_n_image@{i j k u} n (unit_name x)).
   - apply lift_isconnmap_trunc@{j k}.
     rapply conn_point_incl@{j u}.
-  - by rapply islocally_small_truncmap@{i j k u}.
+  - by rapply islocallysmall_truncmap@{i j k u}.
 Defined.
 
 (* This is Theorem 2.6 from the paper. *)
-Definition issmall_iff_locally_small_truncated@{i j k u | i < k, j <= k, k < u} `{PropResizing} `{Univalence}
+Definition issmall_iff_islocallysmall_truncated@{i j k u | i < k, j <= k, k < u} `{PropResizing} `{Univalence}
            (n : trunc_index) (X : Type@{j})
   : IsSmall@{i j} X <-> (IsLocallySmall@{i j k} (trunc_index_to_nat n) X * IsSmall@{i j} (Trunc n.+1 X)).
 Proof.
@@ -142,7 +142,7 @@ Proof.
 Defined.
 
 (* This is Corollary 2.7 from the paper. *)
-Definition issmall_truncmap_small_truncation@{i j k u | i < k, j <= k, k < u} `{PropResizing} `{Univalence}
+Definition issmall_truncmap_issmall_truncation@{i j k u | i < k, j <= k, k < u} `{PropResizing} `{Univalence}
            (n : trunc_index)
            {X Y : Type@{j}}
            (f : X -> Y) (T : IsTruncMap n.+1 f)
@@ -150,7 +150,7 @@ Definition issmall_truncmap_small_truncation@{i j k u | i < k, j <= k, k < u} `{
            (sTrX : IsSmall@{i j} (Trunc n.+1 X))
   : IsSmall@{i j} X.
 Proof.
-  apply (snd (issmall_iff_locally_small_truncated@{i j k u} n X)).
+  apply (snd (issmall_iff_islocallysmall_truncated@{i j k u} n X)).
   nrefine (_, sTrX).
-  rapply islocally_small_truncmap@{i j k u}; assumption.
+  rapply islocallysmall_truncmap@{i j k u}; assumption.
 Defined.
