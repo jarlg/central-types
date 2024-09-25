@@ -14,212 +14,6 @@ Summary of the most common situation:  [i < k < u, j <= k], where [i] is for the
 
 We include universe annotations when they clarify the meaning (e.g. in [IsSmall] and when using [PropResizing]), and also when it is required in order to keep control of the universe variables. *)
 
-(* We say that [X : Type@{j}] is small (relative to Type@{i}) if it is equivalent to a type in [Type@{i}].  We use a record to avoid an extra universe variable.  This version has no constraints on i and j.  It lands in max(i+1,j), as expected. *)
-Record IsSmall@{i j | } (X : Type@{j}) :=
-  { smalltype : Type@{i} ;
-    equiv_smalltype : smalltype <~> X
-  }.
-Arguments smalltype {X} _.
-Arguments equiv_smalltype {X} _.
-
-(* Note: making [IsSmall] Cumulative makes the following two not necessary, but also means that Coq can't guess universe variables as well in other spots in the file. *)
-Definition lift_issmall@{i j1 j2 | j1 <= j2}
-           (X : Type@{j1})
-           (sX : IsSmall@{i j1} X)
-  : IsSmall@{i j2} X
-  := Build_IsSmall X (smalltype sX) (equiv_smalltype sX).
-
-Definition lower_issmall@{i j1 j2 | j1 <= j2}
-           (X : Type@{j1})
-           (sX : IsSmall@{i j2} X)
-  : IsSmall@{i j1} X
-  := Build_IsSmall X (smalltype sX) (equiv_smalltype sX).
-
-Global Instance ishprop_issmall@{i j k | i < k, j <= k} `{Univalence} (X : Type@{j}) : IsHProp (IsSmall@{i j} X).
-Proof.
-  apply hprop_inhabited_contr.
-  intros [Z e].
-  (* [IsSmall X] is equivalent to [IsSmall Z], which is contractible since it is a based path space. *)
-  rapply (istrunc_equiv_istrunc { Y : Type@{i} & Y <~> Z } _).
-  - equiv_via (sig@{k k} (fun Y : Type@{i} => Y <~> X)).
-    2: issig.
-    apply equiv_functor_sigma_id.
-    intro Y.
-    exact (equiv_postcompose_equiv Y e).
-Defined.
-
-(* A type in [Type@{i}] is clearly small.  Make this a Global Instance? *)
-Definition issmall_in@{i j | i <= j} (X : Type@{i}) : IsSmall@{i j} X
-  := Build_IsSmall X X equiv_idmap.
-
-(* The small types are closed under equivalence. *)
-(* No constraints on i, j1 and j2. *)
-Definition issmall_equiv_issmall@{i j1 j2 | } {A : Type@{j1}} {B : Type@{j2}}
-           (e : A <~> B) (sA : IsSmall@{i j1} A)
-  : IsSmall@{i j2} B.
-Proof.
-  exists (smalltype sA).
-  exact (e oE (equiv_smalltype sA)).
-Defined.
-
-(* The small types are closed under dependent sums. *)
-Definition sigma_closed_issmall@{i j | } {A : Type@{j}}
-           (B : A -> Type@{j}) (sA : IsSmall@{i j} A)
-           (sB : forall a, IsSmall@{i j} (B a))
-  : IsSmall@{i j} { a : A & B a }.
-Proof.
-  exists { a : (smalltype sA) & (smalltype (sB (equiv_smalltype sA a))) }.
-  snrapply equiv_functor_sigma'; intros; apply equiv_smalltype.
-Defined.
-
-(* If a map has small codomain and fibers, then the domain is small. *)
-Definition issmall_codomain_fibers_small@{i j | } {X Y : Type@{j}}
-           (f : X -> Y)
-           (sY : IsSmall@{i j} Y)
-           (sF : forall y : Y, IsSmall@{i j} (hfiber f y))
-  : IsSmall@{i j} X.
-Proof.
-  nrapply issmall_equiv_issmall.
-  - exact (equiv_fibration_replacement f)^-1%equiv.
-  - apply sigma_closed_issmall; assumption.
-Defined.
-
-(* Propositional Resizing says that every (-1)-truncated type is small. *)
-(* No constraints on i and j. *)
-Definition issmall_hprop@{i j | } `{PropResizing} (X : Type@{j}) (T : IsTrunc (-1) X)
-  : IsSmall@{i j} X.
-Proof.
-  exists (resize_hprop@{j i} X).
-  apply (equiv_resize_hprop X)^-1%equiv.
-Defined.
-
-(* Every contractible, i.e. (-2)-truncated type, is small. *)
-Definition issmall_contr@{i j| } (X : Type@{j}) (T : IsTrunc (-2) X): IsSmall@{i j} X.
-Proof.
-  refine (issmall_equiv_issmall (equiv_contr_unit)^-1 _).
-  apply issmall_in.
-Defined.
-
-(* This isn't yet in the paper. It lets us simplify the statement of Proposition 2.8. *)
-Definition issmall_inhabited_issmall@{i j k u | i < k, j <= k, k < u} `{PropResizing} `{Univalence}
-           (X : Type@{j})
-           (isX : X -> IsSmall@{i j} X)
-  : IsSmall@{i j} X.
-Proof.
-  (* Since IsSmall@{i j} lives in a universe larger than [i] and we're not assuming [i <= j], we have to pass through universe [k], which we think of as max(i+1,j). *)
-  apply lower_issmall@{i j k}.
-  (* Now the goal is IsSmall@{i k} X. *)
-  apply (issmall_codomain_fibers_small isX).
-  - rapply issmall_hprop.
-  - intro sX.
-    apply sigma_closed_issmall.
-    1: apply (lift_issmall _ sX).
-    intro x.
-    rapply issmall_contr.
-Defined.
-
-(* Locally small types. *)
-
-(* We say that a type [X] is 0-locally small if it is small, and (n+1)-locally small if its identity types are n-small. *)
-(* TODO: Can I make this an inductive type and avoid the extra universe variable [k]? *)
-Fixpoint IsLocallySmall@{i j k | i < k, j <= k} (n : nat) (X : Type@{j}) : Type@{k}
-  := match n with
-    | 0%nat => IsSmall@{i j} X
-    | S m => forall x y : X, IsLocallySmall m (x = y)
-    end.
-
-Definition ishprop_islocally_small@{i j k u | i < k, j <= k, k <= u, j < u} `{Univalence}
-           (n : nat) (X : Type@{j})
-  : IsHProp@{k} (IsLocallySmall@{i j k} n X).
-Proof.
-  (* We use [simple_induction] to control the universe variable. *)
-  revert X; simple_induction n n IHn; exact _.
-Defined.
-
-Definition islocally_small_in@{i j k | i <= j, j <= k, i < k} (n : nat) (X : Type@{i})
-  : IsLocallySmall@{i j k} n X.
-Proof.
-  revert X.
-  induction n; intro X.
-  - apply issmall_in.
-  - intros x y.
-    exact (IHn (x = y)).
-Defined.
-
-(* The locally small types are closed under equivalence. *)
-Definition islocally_small_equiv_islocally_small@{i j1 j2 k u | i < k, j1 <= k, j2 <= k, k <= u, j1 < u, j2 < u}
-           (n : nat) {A : Type@{j1}} {B : Type@{j2}}
-           (e : A <~> B) (lsA : IsLocallySmall@{i j1 k} n A)
-  : IsLocallySmall@{i j2 k} n B.
-Proof.
-  revert A B e lsA.
-  simple_induction n n IHn.
-  - exact @issmall_equiv_issmall.
-  - intros A B e lsA b b'.
-    nrapply IHn.
-    * exact (equiv_ap' (e^-1%equiv) b b')^-1%equiv.
-    * apply lsA.
-Defined.
-
-Definition sigma_closed_islocally_small@{i j k u | i < k, j <= k, k <= u, j < u}
-           (n : nat) {A : Type@{j}} (B : A -> Type@{j})
-           (lsA : IsLocallySmall@{i j k} n A)
-           (lsB : forall a, IsLocallySmall@{i j k} n (B a))
-  : IsLocallySmall@{i j k} n { a : A & B a }.
-Proof.
-  revert A B lsA lsB.
-  simple_induction n n IHn.
-  - exact @sigma_closed_issmall.
-  - intros A B lsA lsB x y.
-    apply (islocally_small_equiv_islocally_small n (equiv_path_sigma _ x y)).
-    apply IHn.
-    * apply lsA.
-    * intro p.
-      apply lsB.
-Defined.
-
-(* If a map has locally small codomain and fibers, then the domain is locally small. *)
-Definition islocally_small_codomain_fibers_locally_small@{i j k u | i < k, j <= k, k <= u, j < u}
-           (n : nat)
-           {X Y : Type@{j}}
-           (f : X -> Y)
-           (sY : IsLocallySmall@{i j k} n Y)
-           (sF : forall y : Y, IsLocallySmall@{i j k} n (hfiber f y))
-  : IsLocallySmall@{i j k} n X.
-Proof.
-  nrapply islocally_small_equiv_islocally_small@{i j j k u}.
-  - exact (equiv_fibration_replacement f)^-1%equiv.
-  - apply sigma_closed_islocally_small; assumption.
-Defined.
-
-(* A small type is n-locally small for all n. *)
-Definition islocally_small_small@{i j k u | i < k, j <= k, k <= u, j < u} (n : nat)
-           (X : Type@{j}) (sX : IsSmall@{i j} X)
-  : IsLocallySmall@{i j k} n X.
-Proof.
-  apply (islocally_small_equiv_islocally_small@{i i j k u} n (equiv_smalltype sX)).
-  apply islocally_small_in.
-Defined.
-
-(* Sends a trunc_index [m] to the natural number [m+2]. *)
-Fixpoint trunc_index_to_nat (m : trunc_index) : nat
-:= match m with
-     | minus_two => 0
-     | m'.+1 => (trunc_index_to_nat m').+1
-   end.
-
-(* Under Propositional Resizing, every (n+1)-truncated type is (n+2)-locally small. This is Lemma 2.3 in the paper. *)
-Definition islocally_small_trunc@{i j k u | i < k, j <= k, k <= u, j < u} `{PropResizing}
-           (n : trunc_index) (X : Type@{j}) (T : IsTrunc n.+1 X)
-  : IsLocallySmall@{i j k} (trunc_index_to_nat n) X.
-Proof.
-  revert n X T.
-  nrapply trunc_index_rect; cbn.
-  - nrapply issmall_hprop.
-  - intros n IHn X T x y.
-    rapply IHn.
-Defined.
-
 (* Rijke's join construction, taken as an axiom. Egbert assumes [Funext] globally, so we assume it here. Not 100% sure that is needed. This has been formalized by Valery Isaev in the Arend Standard Library available at https://github.com/JetBrains/arend-lib.  See the file Homotopy/Image.ard. *)
 (** TODO: delete the version in Modalities.Truncated when I merge this.  My version uses my set-up, to avoid assuming that i < j. *)
 (** TODO: Actually prove this, and put it somewhere more appropriate. *)
@@ -246,7 +40,7 @@ Proof.
   1: apply jc_factor2.
   apply isequiv_surj_emb.
   - nrapply (cancelR_issurjection (jc_factor1 f ls)).
-    exact (conn_map_homotopic@{k i j k} _ _ _
+    exact (conn_map_homotopic _ _ _
             (symmetric_pointwise_paths@{k i j} _ _ _ _ (jc_factors f ls)) s).
   - apply jc_factor2_isemb.
 Defined.
@@ -265,7 +59,8 @@ Definition small_loops_small@{i j k u| i < k, j <= k, k < u} `{Univalence}
   {B : pType@{j}} `{IsConnected 0 B} (islB : IsSmall@{i j} (loops B))
   : IsSmall@{i j} B.
 Proof.
-  rapply small_pointed_connected_locally_small@{i j k u}.
+  nrapply small_pointed_connected_locally_small@{i j k u}.
+  1: assumption.
   intros b0.
   nrapply (conn_point_elim@{k u} (-1)); [assumption | exact _ |].
   revert b0; nrapply (conn_point_elim@{k u} (-1)); [assumption | exact _ |].
@@ -304,10 +99,10 @@ Definition islocally_small_truncmap@{i j k u | i < k, j <= k, k <= u, j < u} `{P
            (f : X -> Y) (T : IsTruncMap n.+1 f) (ls : IsLocallySmall@{i j k} (trunc_index_to_nat n) Y)
   : IsLocallySmall@{i j k} (trunc_index_to_nat n) X.
 Proof.
-  apply (islocally_small_codomain_fibers_locally_small _ f).
+  apply (islocallysmall_islocallysmall_codomain_fibers _ f).
   - exact ls.
   - intro y.
-    apply islocally_small_trunc.
+    apply islocallysmall_trunc.
     apply T.
 Defined.
 
@@ -336,17 +131,14 @@ Proof.
   split.
   - intro sX.
     split.
-    + by apply islocally_small_small@{i j k u}.
-    + apply (issmall_equiv_issmall (Trunc_functor_equiv@{i j k} _ (equiv_smalltype sX))).
-      apply issmall_in.
+    + by apply islocallysmall_issmall@{i j k}.
+    + rapply (issmall_equiv_issmall (Trunc_functor_equiv@{i j k} _ (equiv_smalltype X))).
   - intros [lsX sTrX].
-    apply (issmall_codomain_fibers_small (@tr n.+1 X)).
+    apply (issmall_issmall_codomain_fibers (@tr n.+1 X)).
     + exact sTrX.
     + intro y.
-      apply (issmall_truncmap_connected@{i j k u} n pr1).
-      * rapply istruncmap_pr1.
-      * exact lsX.
-      * exact _.
+      rapply (issmall_truncmap_connected@{i j k u} n pr1).
+      rapply istruncmap_pr1.
 Defined.
 
 (* This is Corollary 2.7 from the paper. *)
@@ -359,6 +151,6 @@ Definition issmall_truncmap_small_truncation@{i j k u | i < k, j <= k, k < u} `{
   : IsSmall@{i j} X.
 Proof.
   apply (snd (issmall_iff_locally_small_truncated@{i j k u} n X)).
-  refine (_, sTrX).
+  nrefine (_, sTrX).
   rapply islocally_small_truncmap@{i j k u}; assumption.
 Defined.

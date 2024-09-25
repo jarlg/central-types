@@ -6,6 +6,7 @@ Require Import Truncations.  (* To get the correct [isconnected_paths] in scope.
 Require Import misc.
 
 Open Scope pointed_scope.
+Open Scope trunc_scope.
 
 (** The next five results should be generalized to any ReflectiveSubuniverse [O], either using [Sep O] or the approach of Descent.v. *)
 

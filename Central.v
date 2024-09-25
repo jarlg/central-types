@@ -328,14 +328,14 @@ Section UniqueDelooping.
 
 End UniqueDelooping.
 
-Definition issmall_baut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
+Global Instance issmall_baut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
   : IsSmall@{u v} (pBAut1@{u v} A)
   := small_loops_small (Build_IsSmall _ _ pequiv_loops_baut1^-1).
 
 (** A pointed version of smallness. *)
 Definition issmall_pbaut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
   : { BA : pType@{u} & BA <~>* pBAut1@{u v} A }
-  := (_; pequiv_from_pointed_codomain (equiv_smalltype (issmall_baut1 A))).
+  := (_; pequiv_from_pointed_codomain (equiv_smalltype (pBAut1 A))).
 
 (** We break it up to make it easier to use. *)
 Definition spBAut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
