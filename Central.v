@@ -330,7 +330,7 @@ End UniqueDelooping.
 
 Global Instance issmall_baut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
   : IsSmall@{u v} (pBAut1@{u v} A)
-  := small_loops_small (Build_IsSmall _ _ pequiv_loops_baut1^-1).
+  := issmall_issmall_loops (Build_IsSmall _ _ pequiv_loops_baut1^-1).
 
 (** A pointed version of smallness. *)
 Definition issmall_pbaut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
