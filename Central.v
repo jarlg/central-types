@@ -176,7 +176,7 @@ Defined.
 
 (** ** [BAut1 A] is a delooping of a central type *)
 
-(** When [A] is central, [BAut1] is a delooping of [A]. (Prop. 4.6) *)
+(** When [A] is central, [BAut1] is a delooping of [A]. (Prop. 4.4) *)
 Definition pequiv_loops_baut1@{u v w | u < v, v < w} `{Univalence}
   {A : pType@{u}} `{Central@{u} A}
   : loops (pBAut1 A) <~>* A
