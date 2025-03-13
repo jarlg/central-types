@@ -41,10 +41,10 @@ Definition jc_surjection@{i j k | i < k, j <= k} `{Funext} {A : Type@{i}} {X : T
   : IsSmall@{i j} X.
 Proof.
   exists (jc_image f ls).
-  snrapply Build_Equiv.
+  snapply Build_Equiv.
   1: apply jc_factor2.
   apply isequiv_surj_emb.
-  - nrapply (cancelR_issurjection (jc_factor1 f ls)).
+  - napply (cancelR_issurjection (jc_factor1 f ls)).
     exact (conn_map_homotopic _ _ _ (fun x => (jc_factors f ls x)^) s).
   - apply jc_factor2_isemb.
 Defined.
@@ -63,11 +63,11 @@ Definition issmall_issmall_loops@{i j k u| i < k, j <= k, k < u} `{Univalence}
   {B : pType@{j}} `{IsConnected 0 B} (islB : IsSmall@{i j} (loops B))
   : IsSmall@{i j} B.
 Proof.
-  nrapply issmall_pointed_connected_islocallysmall@{i j k u}.
+  napply issmall_pointed_connected_islocallysmall@{i j k u}.
   1: assumption.
   intros b0.
-  nrapply (conn_point_elim@{k u} (-1)); [assumption | exact _ |].
-  revert b0; nrapply (conn_point_elim@{k u} (-1)); [assumption | exact _ |].
+  napply (conn_point_elim@{k u} (-1)); [assumption | exact _ |].
+  revert b0; napply (conn_point_elim@{k u} (-1)); [assumption | exact _ |].
   exact islB.
 Defined.
 
@@ -90,7 +90,7 @@ Proof.
     revert x.
     apply (@conn_map_elim@{k i j k} (Tr (-1)) _ _ f C' _ (fun x => HP x (f b))).
     intro a.
-    snrapply (IHn (a = b) _ (ap@{i j} f)).
+    snapply (IHn (a = b) _ (ap@{i j} f)).
     + srapply isconnmap_ap.
     + apply ls.
 Defined.
@@ -193,7 +193,7 @@ Proof.
     apply (issmall_issmall_codomain_fibers (@tr n.+1 X)).
     + exact sTrX.
     (* The only changes are here. *)
-    + nrapply Trunc_ind; intro y.
+    + napply Trunc_ind; intro y.
       1: apply (@istrunc_leq (-1) n.+1 tt _ _).
       nrefine (issmall_n_image@{i j k u} n (unit_name (y; idpath)) _ _).
       1: rapply conn_point_incl@{k u}. (* The fibres of (n+1)-truncation are (n+1)-connected. *)

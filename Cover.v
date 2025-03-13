@@ -28,7 +28,7 @@ Definition equiv_functor_O_cover_from_point@{u} {O : ReflectiveSubuniverse@{u}}
   {X Y : Type@{u}} (f : X <~> Y) (x : O X)
   : O_cover@{u} X x <~> O_cover@{u} Y (O_functor O f x).
 Proof.
-  nrapply (equiv_functor_hfiber (h:=f) (k:=equiv_O_functor O f)).
+  napply (equiv_functor_hfiber (h:=f) (k:=equiv_O_functor O f)).
   apply to_O_natural.
 Defined.
 
@@ -45,7 +45,7 @@ Definition pequiv_connected_pcomp {A : pType} `{IsConnected 0%nat A}
   : pcomp A pt <~>* A.
 Proof.
   srapply Build_pEquiv'.
-  - snrapply (Build_Equiv _ _ pr1).
+  - snapply (Build_Equiv _ _ pr1).
     apply equiv_connected_pcomp.
   - reflexivity.
 Defined.
@@ -71,7 +71,7 @@ Definition pequiv_comp_property `{Univalence} {X : Type}
   (x : X) (P : X -> Type) `{forall x, IsHProp (P x)} (Px : P x)
   : pcomp (sig P) (x; Px) <~>* pcomp X x.
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   { unfold pcomp, O_pcover, pfiber, hfiber; simpl.
     refine (_ oE (equiv_sigma_assoc _ _)^-1).
     apply equiv_functor_sigma_id; intro y.
@@ -106,7 +106,7 @@ Definition pequiv_pcomp_equiv_to_map `{Univalence}
   {A B : Type@{u}} (e : A <~> B)
   : pcomp (A <~> B) e <~>* pcomp (A -> B) e.
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   { refine (_ oE equiv_functor_O_cover@{u u u u} (issig_equiv _ _)^-1 _); cbn.
     rapply pequiv_comp_property. }
   reflexivity.
@@ -123,7 +123,7 @@ Definition pequiv_pcomp_pequiv_to_pmap `{Univalence}
   {A B : pType@{u}} (e : A <~>* B)
   : pcomp (A <~>* B) e <~>* pcomp (A ->* B) e.
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   { refine (_ oE equiv_functor_O_cover@{u u u u} (issig_pequiv _ _)^-1 _); cbn.
     rapply pequiv_comp_property. }
   reflexivity.

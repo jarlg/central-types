@@ -46,12 +46,12 @@ Definition pequiv_pcomp_endo_pendo_hspace' `{Funext} {A : pType}
 
 Definition psnd' {A B : pType} : pcomp (A * B) (pt, pt) ->* pcomp B pt.
 Proof.
-  snrapply functor_pfiber.
+  snapply functor_pfiber.
   - exact psnd.
-  - snrapply Build_pMap.
+  - snapply Build_pMap.
     + exact (Trunc_functor _ snd).
     + reflexivity.
-  - snrapply Build_pHomotopy; easy.
+  - snapply Build_pHomotopy; easy.
 Defined.
 
 (** Lemma 3.5 *)

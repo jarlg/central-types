@@ -65,7 +65,7 @@ Proof.
   destruct X as [X p], Y as [Y q].
   unfold pretensor_baut1, pretensor_baut1', comp, O_cover, hfiber, ".1", ".2".
   refine (equiv_inverse _).
-  snrapply equiv_functor_sigma'.
+  snapply equiv_functor_sigma'.
   1: apply equiv_equiv_path.
   intro e; destruct e.
   refine (equiv_moveL_equiv_M _ _ oE _).
@@ -89,7 +89,7 @@ Proof.
   destruct X as [X p], Y as [Y q].
   refine (equiv_path_sigma _ _ _ oE _); unfold ".1", ".2".
   unfold pretensor_baut1', comp, O_cover, hfiber, ".1", ".2".
-  snrapply equiv_functor_sigma_id.
+  snapply equiv_functor_sigma_id.
   intro e; destruct e.
   unfold transport.
   snrefine (_ oE equiv_moveR_equiv_M _ _); cbn.

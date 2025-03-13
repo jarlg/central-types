@@ -95,7 +95,7 @@ Defined.
 Proposition pequiv_set_central `{Univalence} {A : pType} `{Central A}
   : IsHSet (A <~>* A).
 Proof.
-  nrapply pequiv_hset_pequiv_pmap.
+  napply pequiv_hset_pequiv_pmap.
   rapply pmap_set_central.
 Defined.
 
@@ -125,7 +125,7 @@ Proposition central_connected_hspace_hprop_pmap_loops `{Univalence} {A : pType}
   : Central A.
 Proof.
   rapply central_connected_hspace_pequiv_set.
-  nrapply pequiv_hset_pequiv_pmap.
+  napply pequiv_hset_pequiv_pmap.
   apply pmap_set_connected_hspace_hprop_pmap_loops.
 Defined.
 
@@ -134,9 +134,9 @@ Global Instance isequiv_evfib_selfmap_central `{Univalence}
   {A : pType} `{Central A} (f : A ->* A)
   : IsEquiv (evfib f).
 Proof.
-  nrapply (isequiv_homotopic (ev1 A o pequiv_comp_hspace [A -> A, const pt] _ _)).
+  napply (isequiv_homotopic (ev1 A o pequiv_comp_hspace [A -> A, const pt] _ _)).
   - apply isequiv_compose.
-  - snrapply (equiv_ind (pequiv_comp_hspace_pt [A -> A, const pt] f) _).
+  - snapply (equiv_ind (pequiv_comp_hspace_pt [A -> A, const pt] f) _).
     + rapply ishspace_map.
     + rapply isleftinvertible_hspace_map.
     + exact _.
@@ -220,7 +220,7 @@ Section UniqueDelooping.
   Definition delooping_central_banding
     : forall b:B, tr (n:=1) (point B = b) = tr@{v} (pointed_type A).
   Proof.
-    nrapply (conn_point_elim 0).
+    napply (conn_point_elim 0).
     - rapply (isconnected_isconnected_loops'@{u v} e).
     - exact _.
       (* todo: experimenting *)
@@ -364,10 +364,10 @@ Lemma unique_delooping_helper@{u +} `{Univalence} (A : pType@{u})
   (h : forall (B : pcType@{u v}) (g : loops B <~>* A), g ==* e o* emap loops (f B g))
   : Contr { B : pcType@{u v} & loops B <~>* A }.
 Proof.
-  snrapply Build_Contr.
+  snapply Build_Contr.
   - refine (BA; e).
   - intros [B g]; cbn in g.
-    snrapply path_sigma.
+    snapply path_sigma.
     + unfold ".1".
       rapply equiv_path_pctype.
       exact (f B g)^-1*.
@@ -392,7 +392,7 @@ Lemma unique_delooping_helper2@{u v w | u < v, v < w} `{Univalence} (A : pType@{
   (h : forall (B : pcType@{u v}) (g : loops@{u} B <~>* A), g ==* e o* emap loops (f B g))
   : Contr { B : pcType@{u v} & loops B <~>* A }.
 Proof.
-  snrapply unique_delooping_helper.
+  snapply unique_delooping_helper.
   - exact (sBA; isconnected_equiv' 0 _ (es)^-1%equiv _).
   - exact (e o*E emap loops es).
   - intros B g.
@@ -400,7 +400,7 @@ Proof.
   - intros B g; cbn beta.
     nrefine (h B g @* _^*).
     nrefine (pmap_compose_assoc _ _ _ @* _).
-    nrapply pmap_postwhisker.
+    napply pmap_postwhisker.
     nrefine (pmap_postwhisker _ _ @* _).
     1: { refine (emap_compose loops@{v} _ _ @* _).  (* Cumulativity is used here. *)
          exact (pmap_prewhisker _ (emap_inv loops es)^*). }
@@ -412,7 +412,7 @@ Global Instance unique_delooping_central@{u v w | u < v, v < w} `{Univalence}
   (A : pType@{u}) `{Central@{u} A}
   : Contr { B : pcType@{u v} & loops B <~>* A }.
 Proof.
-  snrapply unique_delooping_helper2@{u v w}.
+  snapply unique_delooping_helper2@{u v w}.
   - exists (pBAut1 A); exact _.
   - rapply pequiv_loops_baut1.
   - exact (spBAut1 A).
@@ -420,7 +420,7 @@ Proof.
   - intros B g; cbn.
     exact (delooping_pequiv_baut1@{u v w v} g).
   - intros B g; cbn beta.
-    nrapply delooping_pto_baut1_phtpy.
+    napply delooping_pto_baut1_phtpy.
 Defined.
 
 (** We will show that the loops functor defined here is an equivalence. This shows that equivalences have unique deloopings. *)
@@ -480,7 +480,7 @@ Proof.
   (* Coq can find this, but this allows us to remove one universe variable. *)
   pose (@ishspace_baut1_central@{u v w v} _ A _).
   rapply central_connected_hspace_pequiv_set.
-  nrapply (istrunc_equiv_istrunc (A <~>* A)).
+  napply (istrunc_equiv_istrunc (A <~>* A)).
   - symmetry; apply unique_delooping_self_equivalences_central.
-  - nrapply pequiv_set_central@{u v}; assumption.
+  - napply pequiv_set_central@{u v}; assumption.
 Defined.

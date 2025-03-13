@@ -45,7 +45,7 @@ Definition isconnected_isconnected_loops `{Univalence} {n : trunc_index}
            (A : pType) `{IsConnected (Tr 0) A} `{IsConnected n (loops A)}
   : IsConnected n.+1 A.
 Proof.
-  snrapply isconnected_isconnected_paths_pointed.
+  snapply isconnected_isconnected_paths_pointed.
   srapply (conn_point_elim (-1) (A:=A)); assumption.
 Defined.
 
@@ -57,11 +57,11 @@ Definition isconn_map_isconn_map_ap `{Univalence} {n : trunc_index}
 Proof.
   unfold IsConnMap.
   intro b.
-  snrapply (isconnected_isconnected_paths_merely (hfiber f b)).
+  snapply (isconnected_isconnected_paths_merely (hfiber f b)).
   1: apply center, S.
   intros [x p] [y q].
   induction q.
-  nrapply isconnected_equiv'.
+  napply isconnected_equiv'.
   1: apply hfiber_ap.
   apply CM.
 Defined.
@@ -73,11 +73,11 @@ Definition isconn_map_isconn_map_fmap_loops `{Univalence} {n : trunc_index}
   : IsConnMap n.+1 f.
 Proof.
   apply isconn_map_isconn_map_ap.
-  - snrapply (conn_point_elim (-1)). 1,2: exact _. cbn beta.
+  - snapply (conn_point_elim (-1)). 1,2: exact _. cbn beta.
     rapply contr_inhabited_hprop.
     exact (tr (point A; point_eq f)).
-  - snrapply (conn_point_elim (-1)). 1,2: exact _. cbn beta.
-    snrapply (conn_point_elim (-1)). 1,2: exact _. cbn beta.
+  - snapply (conn_point_elim (-1)). 1,2: exact _. cbn beta.
+    snapply (conn_point_elim (-1)). 1,2: exact _. cbn beta.
     pointed_reduce_pmap f.
     refine (conn_map_homotopic _ _ _ _ H2).
     exact (fun p => (concat_1p _) @ concat_p1 _).
@@ -88,11 +88,11 @@ Definition isconn_map_functor_pclassifyingspace `{U : Univalence}
            {G H : Group} (f : GroupHomomorphism G H) (S : IsSurjection f)
   : IsConnMap (Tr 0) (fmap pClassifyingSpace f).
 Proof.
-  snrapply isconn_map_isconn_map_fmap_loops.
+  snapply isconn_map_isconn_map_fmap_loops.
   1, 2: exact _.
-  nrapply (cancelR_conn_map _ bloop).
+  napply (cancelR_conn_map _ bloop).
   - exact _.
-  - nrapply conn_map_homotopic.
+  - napply conn_map_homotopic.
     1: symmetry; apply bloop_natural.
     rapply conn_map_compose.
 Defined.
@@ -156,7 +156,7 @@ Proof.
   unfold IsConnMap, IsConnected, Tr, hfiber; cbn.
   apply iff_functor_forall; intro y.
   apply iff_contr_equiv.
-  nrapply Trunc_functor_equiv@{i j j}.
+  napply Trunc_functor_equiv@{i j j}.
   make_equiv.
 Defined.
 

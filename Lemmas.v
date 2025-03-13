@@ -159,7 +159,7 @@ Global Instance istruncmap_snd {X Y : Type} (n : trunc_index)
   `{IsTrunc n X} : IsTruncMap n (snd (A:=X) (B:=Y)).
 Proof.
   intro y.
-  nrapply (@inO_equiv_inO' (Tr n)).
+  napply (@inO_equiv_inO' (Tr n)).
   2: { snrefine (equiv_fiber_precompose _ _ _ oE _).
        2: exact (equiv_prod_symm _ _ oE equiv_sigma_prod0 _ _).
        rapply hfiber_fibration. }
@@ -200,14 +200,14 @@ Definition nat_eisretr {X Y : Type} (f : X -> Y) `{IsEquiv _ _ f}
   {y0 y1 : Y} (p : y0 = y1)
   : ap (f o f^-1) p @ eisretr f y1 = eisretr f y0 @ p.
 Proof.
-  snrapply concat_A1p.
+  snapply concat_A1p.
 Defined.
 
 Definition nat_eissect {X Y : Type} (f : X -> Y) `{IsEquiv _ _ f}
   {x0 x1 : X} (p : x0 = x1)
   : ap (f^-1 o f) p @ eissect f x1 = eissect f x0 @ p.
 Proof.
-  snrapply concat_A1p.
+  snapply concat_A1p.
 Defined.
 
 (* Rename? *)
@@ -322,7 +322,7 @@ Definition isconnected_isconnected_loops `{Univalence} {n : trunc_index} (A : pT
   `{IsConnected 0%nat A} `{IsConnected n (loops A)}
   : IsConnected n.+1 A.
 Proof.
-  nrapply (conn_pointed_type (ispointed_type A)); hnf.
+  napply (conn_pointed_type (ispointed_type A)); hnf.
   rapply conn_point_elim; unfold hfiber.
   rapply isconnected_equiv'.
   exact (equiv_contr_sigma _)^-1%equiv.

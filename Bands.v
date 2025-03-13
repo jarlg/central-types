@@ -71,7 +71,7 @@ Section Central.
   Proof.
     (** It works to do [destruct p; reflexivity.], but later we need the proof to compute like below. *)
     rapply path_universe_uncurried@{u u v}.
-    snrapply equiv_functor_sigma'.
+    snapply equiv_functor_sigma'.
     1: exact (equiv_precompose_core_cat_equiv (A:=Type) ((equiv_path@{u v} _ _) (ap baut1_pr1 p^))).
     intro e; lazy beta.
     induction p.
@@ -174,10 +174,10 @@ Section Central.
     intro a.
     pose (b := (pequiv_ev1')^-1 (neg a)).
     nrefine (ap (ev1' A o baut1_symm1) (x:=b) _ @ _).
-    1: nrapply (eissect (pequiv_ev1')).
+    1: napply (eissect (pequiv_ev1')).
     nrefine (ap pequiv_ev1' _ @ _).
     1: rapply (baut1_symm_involutive pt pt).
-    nrapply eisretr.
+    napply eisretr.
   Defined.
 
   (** The negation map lets us move between path components of [(A <~> A)]. We define it in two steps to get rid of three universe variables. *)
@@ -280,7 +280,7 @@ Section Central.
   (** The point twists to itself (but a general band does not). *)
   Definition twist_baut1_1 : pt = pt^T.
   Proof.
-    snrapply path_hfiber.
+    snapply path_hfiber.
     1: exact (path_universe_uncurried neg).
     nrefine (_ @ ap _ (concat_1p _)^).
     exact ap_tr_path_universe_neg_neg.
@@ -289,7 +289,7 @@ Section Central.
   Definition twist_involutive : forall X, (X^T)^T = X.
   Proof.
     intros [X p].
-    snrapply path_hfiber.
+    snapply path_hfiber.
     1: exact idpath.
     revert X p; rapply band_induction'.
     refine (_ @ (concat_1p _)^).
@@ -303,7 +303,7 @@ Section Central.
     : forall X, tensor_baut1 X pt = X^T.
   Proof.
     intros [X p].
-    snrapply path_hfiber.
+    snapply path_hfiber.
     1: exact (path_universe_uncurried (equiv_ev_band (X;p) oE baut1_symm _ _)).
     revert X p; rapply band_induction'.
     refine (_ @ ap _ (concat_1p _)^).
@@ -322,7 +322,7 @@ Section Central.
   (** It follows that we get an H-space structure by first twisting the left factor. *)
   Local Instance hspace_twisted_baut1 : IsHSpace (pBAut1 A).
   Proof.
-    snrapply Build_IsHSpace.
+    snapply Build_IsHSpace.
     - exact twisted_tensor_baut1.
     - intro X.
       refine (ap (fun x => tensor_baut1 x X) twist_baut1_1^ @ _).
