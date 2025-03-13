@@ -1,6 +1,8 @@
-From HoTT Require Import Basics Types Pointed Truncations
+From HoTT Require Import Basics Types
+  WildCat.Core WildCat.Equiv WildCat.Yoneda
+  Pointed Truncations
   Homotopy.HSpace Homotopy.Cover Homotopy.EvaluationFibration
-  WhiteheadsPrinciple WildCat PathAny
+  WhiteheadsPrinciple Homotopy.IdentitySystems
   Modalities.ReflectiveSubuniverse Modalities.Separated.
 
 Require Import Lemmas HSpace Cover SelfMaps Bands BAut1 Smallness misc.
@@ -8,6 +10,7 @@ Require Import Lemmas HSpace Cover SelfMaps Bands BAut1 Smallness misc.
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 Local Open Scope trunc_scope.
+Local Open Scope path_scope.
 
 (** * Central types *)
 
@@ -109,7 +112,7 @@ Proof.
   intro phi.
   (* Since [A ->* A] is homogeneous, it's enough to check this for [phi] the constant map.  Here we use that [A ->* A] is again a left-invertible H-space, which requires coherence.  We could alternatively refactor this through [A ->* A] being homogeneous, which shouldn't need coherence.  In any case, we simply upgrade the H-space structure to a coherent one. *)
   rapply (istrunc_equiv_istrunc (loops [A ->* A, pconst])).
-  { rapply (emap loops).
+  { tapply (emap loops).
     rapply ishomogeneous.
     unshelve rapply ishomogeneous_hspace.
     rapply iscohhspace_hspace. }
@@ -381,7 +384,7 @@ Proof.
       refine (_ @* (h B g)^* ).
       rapply pmap_postwhisker.
       refine (cate_inv2 (emap_inv loops _)^* $@ _).
-      rapply cate_inv_V.
+      tapply cate_inv_V.
 Defined.
 
 (** This version handles the situation where the center of contraction is large (in universe [v]), but is equivalent to a type in universe [u]. That this goes through uses cumulativity in various ways. *)

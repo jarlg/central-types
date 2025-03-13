@@ -51,7 +51,7 @@ Proof.
   - snapply Build_pMap.
     + exact (Trunc_functor _ snd).
     + reflexivity.
-  - snapply Build_pHomotopy; easy.
+  - by snapply Build_pHomotopy.
 Defined.
 
 (** Lemma 3.5 *)

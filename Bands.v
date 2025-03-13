@@ -6,6 +6,7 @@ Require Import Lemmas HSpace SelfMaps Cover BAut1.
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
+Local Open Scope path_scope.
 
 (** ** Tensoring bands *)
 
@@ -176,7 +177,7 @@ Section Central.
     nrefine (ap (ev1' A o baut1_symm1) (x:=b) _ @ _).
     1: napply (eissect (pequiv_ev1')).
     nrefine (ap pequiv_ev1' _ @ _).
-    1: rapply (baut1_symm_involutive pt pt).
+    1: exact (baut1_symm_involutive pt pt _).
     napply eisretr.
   Defined.
 

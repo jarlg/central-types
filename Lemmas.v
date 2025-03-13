@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types Truncations HFiber Pointed 
-  Modalities.ReflectiveSubuniverse WildCat PathAny Homotopy.HSpace.
+  Modalities.ReflectiveSubuniverse WildCat Homotopy.IdentitySystems Homotopy.HSpace.
 
 Open Scope pointed_scope.
 
@@ -338,7 +338,8 @@ Proof.
   exact e^-1%equiv.
 Defined.
 
-(* Put in PathAny.v, right after [equiv_path_from_contr].  (Also, the last line of the proof of equiv_path_from_contr can be replaced with "rapply isequiv_contr_contr." and the comment can be deleted.) *)
+(* Put in IdentitySystems.v, right after [equiv_path_from_contr].  (Also, the last line of the proof of equiv_path_from_contr can be replaced with "rapply isequiv_contr_contr." and the comment can be deleted.) *)
+(* The above comment is old; not sure if it still applies. *)
 Definition equiv_path_from_contr_center {A : Type} (P : A -> Type)
            (cp : Contr {y:A & P y} )
            (b : A)
