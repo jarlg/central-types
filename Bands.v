@@ -20,7 +20,7 @@ Section Central.
 
   Local Definition pequiv_ev1'
     : pcomp (A <~> A) equiv_idmap <~>* A
-    := Build_pEquiv _ _ (ev1' A) _.
+    := Build_pEquiv (ev1' A) _.
 
   (** Under the hypotheses of this section, [ev_band] is an equivalence. *)
   Local Instance isequiv_ev_band@{w}

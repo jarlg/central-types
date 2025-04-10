@@ -21,7 +21,7 @@ Definition equiv_isequiv_cancelR `{Funext} {A B C}
   : IsEquiv g <~> IsEquiv (g o f).
 Proof.
   apply equiv_iff_hprop.
-  1: intro e; apply isequiv_compose.
+  1: intro e; rapply isequiv_compose.
   intro e.
   apply (isequiv_homotopic ((g o f) o f^-1)).
   intro x.
@@ -35,7 +35,7 @@ Definition equiv_isequiv_cancelL `{Funext} {A B C}
   : IsEquiv f <~> IsEquiv (g o f).
 Proof.
   apply equiv_iff_hprop.
-  1: intro e; apply isequiv_compose.
+  1: intro e; rapply isequiv_compose.
   intro e.
   apply (isequiv_homotopic (g^-1 o (g o f))).
   intro x.

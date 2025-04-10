@@ -24,7 +24,7 @@ Definition induced_cohhspace_equiv_ev1 `{Funext} (A : pType)
   `{E : IsEquiv _ _ (ev1 A)} : IsCohHSpace A.
 Proof.
   apply (equiv_iscohhspace_psect A)^-1.
-  pose (pev := Build_pEquiv _ _ (ev1 A) E).
+  pose (pev := Build_pEquiv (ev1 A) E).
   exists (pfib _ o* pev^-1*).
   refine ((pmap_compose_assoc _ _ _)^* @* _).
   exact (peisretr pev).

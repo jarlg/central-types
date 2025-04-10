@@ -28,7 +28,7 @@ Defined.
 
 Definition pequiv_ev1' `{Univalence} {A : pType} `{Central A}
   : pcomp (A <~> A) equiv_idmap <~>* A
-  := Build_pEquiv _ _ (ev1' A) _.
+  := Build_pEquiv (ev1' A) _.
 
 (** Central types are connected. *)
 Global Instance isconnected_central {A : pType} `{Central A}
@@ -138,7 +138,7 @@ Global Instance isequiv_evfib_selfmap_central `{Univalence}
   : IsEquiv (evfib f).
 Proof.
   napply (isequiv_homotopic (ev1 A o pequiv_comp_hspace [A -> A, const pt] _ _)).
-  - apply isequiv_compose.
+  - rapply isequiv_compose.
   - snapply (equiv_ind (pequiv_comp_hspace_pt [A -> A, const pt] f) _).
     + rapply ishspace_map.
     + rapply isleftinvertible_hspace_map.
@@ -154,7 +154,7 @@ Defined.
 (** The inversion operation on a central type. *)
 Definition inv `{Univalence} {A : pType} `{Central A} : A ->* A.
 Proof.
-  refine (Build_pMap _ _ (fun a => (a *.)^-1 pt) _).
+  refine (Build_pMap (fun a => (a *.)^-1 pt) _).
   apply moveR_equiv_V.
   exact (hspace_left_identity _)^.
 Defined.
@@ -162,7 +162,7 @@ Defined.
 Definition equiv_inv `{Univalence} {A : pType} `{Central A}
   : A <~>* A.
 Proof.
-  apply (Build_pEquiv _ _ inv).
+  apply (Build_pEquiv inv).
   (* Since [A] is connected, it suffices to show that [hfiber inv pt] is contractible. *)
   apply isequiv_contr_map; hnf.
   rapply (conn_point_elim (-1)).
@@ -327,7 +327,7 @@ Section UniqueDelooping.
   Defined.
 
   Definition delooping_pequiv_baut1 : B <~>* pBAut1 A
-    := Build_pEquiv _ _ delooping_pto_baut1 isequiv_delooping_pto_baut1.
+    := Build_pEquiv delooping_pto_baut1 isequiv_delooping_pto_baut1.
 
 End UniqueDelooping.
 
