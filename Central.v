@@ -179,7 +179,7 @@ Defined.
 
 (** ** [BAut1 A] is a delooping of a central type *)
 
-(** When [A] is central, [BAut1] is a delooping of [A]. (Prop. 4.4) *)
+(** When [A] is central, [BAut1] is a delooping of [A]. (A pointed version of Prop. 4.4.) *)
 Definition pequiv_loops_baut1@{u v w | u < v, v < w} `{Univalence}
   {A : pType@{u}} `{Central@{u} A}
   : loops (pBAut1 A) <~>* A
@@ -226,7 +226,6 @@ Section UniqueDelooping.
     napply (conn_point_elim 0).
     - rapply (isconnected_isconnected_loops'@{u v} e).
     - exact _.
-      (* todo: experimenting *)
       (* This would work: 
     - apply (ap tr), path_universe_uncurried.
        but this is more convenient below: *)
@@ -352,7 +351,7 @@ Definition pequiv_spbaut1_pbaut1@{u v w | u < v, v < w} `{Univalence} (A : pType
 (** We also record that [spBAut1 A] is again a delooping, and is connected. *)
 Definition pequiv_loops_spbaut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
   : loops@{v} (spBAut1@{u v w} A) <~>* A
-  := pequiv_loops_baut1 o*E (emap loops@{v} (pequiv_spbaut1_pbaut1 A)).
+  := pequiv_loops_baut1 o*E emap loops@{v} (pequiv_spbaut1_pbaut1 A).
 
 Global Instance isconnected_spbaut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
   : IsConnected@{u} 0 (spBAut1 A)
@@ -360,8 +359,8 @@ Global Instance isconnected_spbaut1@{u v w | u < v, v < w} `{Univalence} (A : pT
 
 (* TODO: get rid of rewrites? *)
 
-(** Abstracting the main idea of the argument makes it go much more smoothly.  It's faster and requires many fewer universe annotations. This has two universes, [u < v].  [v] is used to form the sigma type and for WildCat instances. *)
-Lemma unique_delooping_helper@{u +} `{Univalence} (A : pType@{u})
+(** Abstracting the main idea of the argument makes it go much more smoothly.  It's faster and requires many fewer universe annotations. The universe [v] is used to form the sigma type and for WildCat instances. *)
+Lemma unique_delooping_helper@{u v | u < v} `{Univalence} (A : pType@{u})
   (BA : pcType@{u v}) (e : loops BA <~>* A)
   (f : forall B : pcType@{u v}, loops B <~>* A -> B <~>* BA)
   (h : forall (B : pcType@{u v}) (g : loops B <~>* A), g ==* e o* emap loops (f B g))
@@ -463,9 +462,9 @@ Definition equiv_loops_functor_pbaut1 `{Univalence}
 Opaque spBAut1.
 
 (** The special case of self-equivalences. The equivalence that is produced is roundabout, involving both [phi] and [phi^-1], as we need to pass through small types. *)
-Definition unique_delooping_self_equivalences_central@{u v w +} `{Univalence}
+Definition unique_delooping_self_equivalences_central@{u v w | u < v, v < w} `{Univalence}
   {A : pType@{u}} `{Central@{u} A}
-  : (pBAut1 A <~>* pBAut1 A) <~> (A <~>* A).
+  : (pBAut1@{u v} A <~>* pBAut1 A) <~> (A <~>* A).
 Proof.
   refine (_ oE (equiv_precompose_core_cat_equiv@{w v v v w v v} (pequiv_spbaut1_pbaut1 A))).
   srefine (_ oE equiv_loops_functor_pbaut1@{u v w} _ (spBAut1 A;_)).
