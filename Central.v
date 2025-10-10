@@ -302,7 +302,7 @@ Section UniqueDelooping.
     refine (ap _ _ @ _).
     { refine (ap _ (pointed_tensor_trivial_comp _) @ _).
       apply ap_delooping_pto_baut1. }
-    simpl. rewrite concat_1p.
+    unfold equiv_concat_r, equiv_fun, concat_r. rewrite concat_1p.
     rewrite <- delooping_central_band_pt_comp, inv_V.
     exact (transport_idmap_pretensor_path_baut1
              (delooping_to_baut1 pt) pt _ _).
@@ -471,7 +471,7 @@ Proof.
   srefine (_ oE equiv_loops_functor_pbaut1@{u v w} _ (spBAut1 A;_)).
   2: exact (isconnected_equiv' 0 _ (pequiv_spbaut1_pbaut1 A)^-1 _).
   refine (equiv_precompose_core_cat_equiv@{w v v v w v v} _).
-  symmetry; apply pequiv_loops_spbaut1.
+  symmetry; rapply pequiv_loops_spbaut1.
 Defined.
 
 Transparent spBAut1.
@@ -481,7 +481,7 @@ Definition central_pbaut1@{u v w | u < v, v < w} `{Univalence}
   : Central (pBAut1 A).
 Proof.
   (* Coq can find this, but this allows us to remove one universe variable. *)
-  pose (@ishspace_baut1_central@{u v w v} _ A _).
+  pose (@ishspace_baut1_central@{u v w} _ A _).
   rapply central_connected_hspace_pequiv_set.
   napply (istrunc_equiv_istrunc (A <~>* A)).
   - symmetry; apply unique_delooping_self_equivalences_central.
