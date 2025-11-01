@@ -2,7 +2,7 @@ From HoTT Require Import Basics Types Truncations Pointed
   Homotopy.HSpace Homotopy.Cover Homotopy.EvaluationFibration
   Tactics.EvalIn Modalities.ReflectiveSubuniverse.
 
-Require Import Lemmas Cover.
+Require Import Lemmas Top.Cover.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.

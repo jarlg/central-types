@@ -5,7 +5,7 @@ From HoTT Require Import Basics Types
   WhiteheadsPrinciple Homotopy.IdentitySystems
   Modalities.ReflectiveSubuniverse Modalities.Separated.
 
-Require Import Lemmas HSpace Cover SelfMaps Bands BAut1 Smallness misc.
+Require Import Lemmas HSpace Top.Cover SelfMaps Bands BAut1 Top.Smallness misc.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.

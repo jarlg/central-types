@@ -1,6 +1,6 @@
 From HoTT Require Import Basics Types EquivGroupoids Pointed HFiber Truncations
   Homotopy.HSpace Homotopy.Cover Homotopy.EvaluationFibration.
-Require Import Lemmas HSpace SelfMaps Cover.
+Require Import Lemmas HSpace SelfMaps Top.Cover.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.

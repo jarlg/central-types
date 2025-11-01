@@ -1,7 +1,7 @@
 From HoTT Require Import Basics Types HFiber
   Truncations.Core Pointed.Core Pointed.pEquiv Homotopy.HSpace.Core Homotopy.Cover WildCat.
 
-Require Import Lemmas HSpace SelfMaps Cover BAut1.
+Require Import Lemmas HSpace SelfMaps Top.Cover BAut1.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
