@@ -3,7 +3,7 @@
 Require Import HoTT.
 Require Import Truncations.  (* To get the correct [isconnected_paths] in scope. *)
 
-Require Import misc.
+From CentralTypes Require Import misc.
 
 Open Scope pointed_scope.
 Open Scope trunc_scope.
@@ -149,6 +149,7 @@ Definition Trunc_functor_equiv@{i j k | i <= k, j <= k} (n : trunc_index)
 (** We can move [IsConnMap (Tr n) f] across universes, since [Tr] is cumulative. *)
 (* Could generalize to  i j k, with i <= j and i <= k. *)
 (* This is essentially the same as [conn_map_O_leq' (Tr@{j} n) (Tr@{i} n)], except that that needs [IsAccRSU (Tr n)], which I couldn't find in the library.  It follows from the results at the end of Spheres.v, but hasn't been filled in.  So we prove this directly.  (The other hypothesis of [conn_map_O_leq'] is found automatically.)  **  Results recently added to misc.v do show that (Tr n) is accessible, so this could be revamped. *)
+(* But maybe we can just make IsConnMap a Cumulative Class?  And/or IsConnected? Or Contr, IsTrunc, IsTrunc_internal? *)
 Definition lift_isconnmap_trunc@{i j | i <= j} (n : trunc_index)
            {X Y : Type@{i}} (f : X -> Y)
   : IsConnMap@{i} (Tr@{i} n) f <-> IsConnMap@{j} (Tr@{j} n) f.
@@ -161,7 +162,7 @@ Proof.
 Defined.
 
 (* Should this be a Global Instance? [mapinO_pr1] is, but isn't found automatically for this goal. *)
-Definition istruncmap_pr1 {n : trunc_index} {A : Type} (B : A -> Type) (T : forall a, IsTrunc n (B a))
+Global Instance istruncmap_pr1 {n : trunc_index} {A : Type} (B : A -> Type) (T : forall a, IsTrunc n (B a))
   : IsTruncMap n (pr1 : {a : A & B a} -> A).
 Proof.
   apply (mapinO_pr1 (Tr n)).

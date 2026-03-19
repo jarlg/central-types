@@ -5,7 +5,7 @@ From HoTT Require Import Basics Types
   WhiteheadsPrinciple Homotopy.IdentitySystems
   Modalities.ReflectiveSubuniverse Modalities.Separated.
 
-Require Import Lemmas HSpace Top.Cover SelfMaps Bands BAut1 Top.Smallness misc.
+From CentralTypes Require Import Lemmas Cover SelfMaps Bands BAut1 Smallness misc.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
@@ -14,21 +14,37 @@ Local Open Scope path_scope.
 
 (** * Central types *)
 
-(** A pointed type is central if the evaluation fibration of the identity is an equivalence. *)
+(** A pointed type is central if the evaluation fibration of the identity is an equivalence. Recall that [ev1] is the map from the component of [idmap] in [A -> A] to [A] which evaluates at the basepoint of [A]. *)
 Class Central (A : pType) := central : IsEquiv (ev1 A).
 Global Existing Instance central.
 
+(** We also have the map [ev1' A], whose domain is the component of [equiv_idmap] in [A <~> A], and which is definitionally equal to [ev1 A o pequiv_pcomp_equiv_to_map pequiv_pmap_idmap].  Since the second map is an equivalence, it follows that [ev1' A] is an equivalence. *)
 Global Instance isequiv_ev1' `{Univalence} {A : pType@{u}} `{Central@{u} A}
-  : IsEquiv (ev1' A).
-Proof.
-  change (pointed_fun (ev1' A))
-    with (ev1 A o pequiv_pcomp_equiv_to_map pequiv_pmap_idmap).
-  rapply isequiv_compose.
-Defined.
+  : IsEquiv (ev1' A)
+  := isequiv_compose (pequiv_pcomp_equiv_to_map pequiv_pmap_idmap) (ev1 A).
 
 Definition pequiv_ev1' `{Univalence} {A : pType} `{Central A}
   : pcomp (A <~> A) equiv_idmap <~>* A
   := Build_pEquiv (ev1' A) _.
+
+(** And the converse is true as well. *)
+Definition isequiv_ev1 `{Univalence} {A : pType} `{!IsEquiv (ev1' A)}
+  : Central A
+  := cancelR_isequiv (pequiv_pcomp_equiv_to_map pequiv_pmap_idmap).
+
+(** A type that is pointed equivalent to a central type is central. *)
+Definition central_pequiv_central `{Funext} {A B : pType} `{Central A} (e : A <~>* B)
+  : Central B.
+Proof.
+  transparent assert (e' : ([A -> A, idmap] <~>* [B -> B, idmap])).
+  { snapply Build_pEquiv'.
+    1: exact (equiv_postcompose' e oE (equiv_precompose' e)^-1%equiv).
+    cbn. funext b; apply eisretr. }
+  srapply (isequiv_commsq (ev1 A) (ev1 B) (pequiv_pfunctor_pTr_pcover e') e).
+  intros [f p]; cbn.
+  apply (ap (e o f)).
+  symmetry; apply (point_eq e^-1* ).
+Defined.
 
 (** Central types are connected. *)
 Global Instance isconnected_central {A : pType} `{Central A}
@@ -152,6 +168,7 @@ Proof.
 Defined.
 
 (** The inversion operation on a central type. *)
+(** TODO: rename to be less generic. *)
 Definition inv `{Univalence} {A : pType} `{Central A} : A ->* A.
 Proof.
   refine (Build_pMap (fun a => (a *.)^-1 pt) _).
@@ -159,6 +176,7 @@ Proof.
   exact (hspace_left_identity _)^.
 Defined.
 
+(** TODO: rename to be less generic. *)
 Definition equiv_inv `{Univalence} {A : pType} `{Central A}
   : A <~>* A.
 Proof.
@@ -184,6 +202,14 @@ Definition pequiv_loops_baut1@{u v w | u < v, v < w} `{Univalence}
   {A : pType@{u}} `{Central@{u} A}
   : loops (pBAut1 A) <~>* A
   := pequiv_ev1'@{u v} o*E (pequiv_pretensor_path_baut1@{u v w w v} pt)^-1*.
+
+(* The unpointed map underlying [pequiv_loops_baut1] is definitionally equal to the map underlying the equivalence [equiv_ev_band' pt] defined in Bands.v.  It follows that the two unpointed equivalences are propositionally equal. *)
+Definition pequiv_loops_baut1_equiv_ev_band' `{Univalence}
+  {A : pType@{u}} `{Central@{u} A}
+  : pointed_equiv_equiv (pequiv_loops_baut1 (A:=A)) = equiv_ev_band' (A:=A) pt.
+Proof.
+  apply path_equiv; reflexivity.
+Defined.
 
 (** We will frequently work with pointed, connected types. This could be a Record, but then we'd have to use issig in several places. *)
 Definition pcType@{u +} := { B : pType@{u} & IsConnected 0 B }.
@@ -237,7 +263,7 @@ Section UniqueDelooping.
   Definition delooping_to_baut1 : B -> pBAut1 A
     := fun b => (pt = b; delooping_central_banding b).
 
-  (* There are (a priori) two ways of making this map pointed: using [pointed_tensor_trivial], and using [e]. In fact, these identifications are equal, as we now show. *)
+  (* There are (a priori) two ways of making this map pointed: using [pointed_band_trivial], and using [e]. In fact, these identifications are equal, as we now show. *)
 
   (** First we construct the identification which uses [e]. *)
   Definition delooping_central_band_pt
@@ -256,11 +282,11 @@ Section UniqueDelooping.
 
   (* TODO: Is it hard to instead show
     : delooping_central_band_pt
-      = (pointed_tensor_trivial (delooping_to_baut1 pt) idpath)^.
+      = (pointed_band_trivial (delooping_to_baut1 pt) idpath)^.
     ?  This would match the comment above better. *)
   Definition delooping_central_band_pt_comp
     : delooping_central_band_pt^
-      = pointed_tensor_trivial (delooping_to_baut1 pt) idpath.
+      = pointed_band_trivial (delooping_to_baut1 pt) idpath.
   Proof.
     apply moveL_equiv_M.
     refine (ap (ev_band _) _ @ _).
@@ -270,13 +296,13 @@ Section UniqueDelooping.
     exact (point_eq e^-1*).
   Defined.
 
-  (** Now we define the pointed map using [pointed_tensor_trivial]. *)
+  (** Now we define the pointed map using [pointed_band_trivial]. *)
   Definition delooping_pto_baut1 : B ->* pBAut1 A.
   Proof.
     srapply Build_pMap.
     1: exact (fun b => (pt = b; delooping_central_banding b)).
     lazy beta.
-    symmetry; apply pointed_tensor_trivial; unfold pr1.
+    symmetry; apply pointed_band_trivial; unfold pr1.
     reflexivity.
   Defined.
 
@@ -299,7 +325,7 @@ Section UniqueDelooping.
     simpl.
     rewrite inv_V, 2 pr1_path_pp, 2 transport_pp.
     refine (ap _ _ @ _).
-    { refine (ap _ (pointed_tensor_trivial_comp _) @ _).
+    { refine (ap _ (pointed_band_trivial_comp _) @ _).
       apply ap_delooping_pto_baut1. }
     unfold equiv_concat_r, equiv_fun, concat_r. rewrite concat_1p.
     rewrite <- delooping_central_band_pt_comp, inv_V.
@@ -330,25 +356,7 @@ Section UniqueDelooping.
 
 End UniqueDelooping.
 
-Global Instance issmall_baut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
-  : IsSmall@{u v} (pBAut1@{u v} A)
-  := issmall_issmall_loops (Build_IsSmall _ _ pequiv_loops_baut1^-1).
-
-(** A pointed version of smallness. *)
-Definition issmall_pbaut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
-  : { BA : pType@{u} & BA <~>* pBAut1@{u v} A }
-  := (_; pequiv_from_pointed_codomain (equiv_smalltype (pBAut1 A))).
-
-(** We break it up to make it easier to use. *)
-Definition spBAut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
-  : pType@{u}
-  := (issmall_pbaut1 A).1.
-
-Definition pequiv_spbaut1_pbaut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
-  : spBAut1@{u v w} A <~>* pBAut1@{u v} A
-  := (issmall_pbaut1 A).2.
-
-(** We also record that [spBAut1 A] is again a delooping, and is connected. *)
+(** By our general theory, [BAut1 A] is small, with small, pointed representative [spBAut1 A].  When [A] is central, [spBAut1 A] is again a delooping, and is connected.  It would be nice to replace [loops@{v}] with [loops@{u}] here.  We do eventually see this in [unique_delooping_central]. *)
 Definition pequiv_loops_spbaut1@{u v w | u < v, v < w} `{Univalence} (A : pType@{u}) `{Central@{u} A}
   : loops@{v} (spBAut1@{u v w} A) <~>* A
   := pequiv_loops_baut1 o*E emap loops@{v} (pequiv_spbaut1_pbaut1 A).
@@ -485,4 +493,18 @@ Proof.
   napply (istrunc_equiv_istrunc (A <~>* A)).
   - symmetry; apply unique_delooping_self_equivalences_central.
   - napply pequiv_set_central@{u v}; assumption.
+Defined.
+
+Hint Immediate central_pbaut1 : typeclass_instances.
+
+Definition central_cumulative@{u v w | u <= v, u <= w} (A : pType@{u})
+  : Central@{v} A -> Central@{w} A
+  := idmap.
+
+Definition central_spbaut1@{u v w | u < v, v < w} `{Univalence}
+  {A : pType@{u}} `{Central@{u} A}
+  : Central@{u} (spBAut1@{u v w} A).
+Proof.
+  apply central_cumulative@{u v u}.
+  exact (central_pequiv_central (pequiv_spbaut1_pbaut1 _)^-1* ).
 Defined.

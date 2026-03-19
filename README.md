@@ -1,8 +1,8 @@
-# Central types (work in progress)
+# Central types, vector fields on spheres, Euler classes, etc.
 
-This repository contains work in progress on formalizing results from the paper [Central H-spaces and banded types](https://arxiv.org/abs/2301.02636) by Ulrik Buchholtz, Dan Christensen, Jarl G. Taxerås Flaten, and Egbert Rijke.
+This repository contains work in progress on formalizing results from the papers [Central H-spaces and banded types](https://arxiv.org/abs/2301.02636) by Ulrik Buchholtz, Dan Christensen, Jarl G. Taxerås Flaten, and Egbert Rijke (BCFR) and "Vector fields on spheres and Euler classes" by Ulrik Buchholtz, Dan Christensen and David Jaz Myers (BCM) (to be released soon).  The results related to BCM were added on March 18, 2026.
 
-Some results from that paper, mostly related to H-spaces (e.g., Proposition 2.2, Proposition 2.19, Corollary 2.20 and Theorem 2.27), have been merged into the [Coq-HoTT library](https://github.com/HoTT/Coq-HoTT) under the `Homotopy.HSpace` namespace.
+Some results from BCFR, mostly related to H-spaces (e.g., Proposition 2.2, Proposition 2.19, Corollary 2.20 and Theorem 2.27), have been merged into the [Coq-HoTT library](https://github.com/HoTT/Coq-HoTT) under the `Homotopy.HSpace` namespace.
 The notable results in this repository are:
 
 - Most of **Proposition 3.6:** The characterization of central types
@@ -13,7 +13,28 @@ The notable results in this repository are:
 - **Theorem 4.19:** `BAut1 A` is a coherent H-space whenever `A` is central (see `hspace_twisted_baut`  and `iscoherent_hspace_twisted_baut1` in [`BAut1.v`](./BAut1.v))
 - Part of **Corollary 4.20:** `BAut1 A` is central whenever `A` is central (see `central_pbaut` in [`Central.v`](./Central.v))
 
-Version 0e542a59 from Nov 1, 2025 has been tested with Rocq 9.0.0 and Rocq 9.1.0 against commit 5c938e4f of Coq-HoTT from October 31, 2025.
+Notable results from the BCM paper are:
+
+- Results on co-H-spaces, in [`CoHSpace.v`](./CoHSpace.v).
+- Definitions of the Euler class and Thom class and their relationship,
+  in [`ThomEuler.v`](./ThomEuler.v).
+- All of the material on reflections, in [`Reflections.v`](./Reflections.v).
+- The general tangent bundle construction, in [`TorsorTangent.v`](./TorsorTangent.v),
+  e.g. `tau` and `theta` in that file.
+- The tangent bundles of spheres, in [`Spheres.v`](./Spheres.v),
+  including the existence of sections of for odd spheres.
+- The new material required to prove the Hairy Ball Theorem,
+  in [`TorsorTangent.v`](./TorsorTangent.v).  Some (known) necessary background
+  on the homotopy groups of spheres is not yet available in this library.
+- The tangent bundles of real and complex projective spaces, in [`ProjectiveSpaces.v`](./ProjectiveSpaces.v).
+
+A lot of necessary background material was also formalized.
+
+The version from Mar 18, 2026 has been tested with Rocq 9.1.0 against commit 6526cb5a of Coq-HoTT from Feb 18, 2026.
+It very likely works with Rocq 9.0.0 as well.
+This is the version that introduced material related to the (BCM) paper.
+
+Version 0e542a59 from Nov 1, 2025 has been tested with Rocq 9.0.0 and Rocq 9.1.0 against commit 5c938e4f of Coq-HoTT from Oct 31, 2025.
 
 Version c7785d4e1 from Oct 10, 2025 has been tested with Rocq 9.0.0 against commit 0025f6cc of Coq-HoTT from Oct 2, 2025.
 
@@ -38,7 +59,7 @@ If you have a local build of Coq-HoTT, you can use the below after filling in th
 ```
 -docroot .
 -R <path to local Coq-HoTT build> HoTT
--R . Top
+-Q . CentralTypes
 -arg -noinit
 -arg -indices-matter
 -arg -native-compiler -arg no
@@ -46,11 +67,21 @@ If you have a local build of Coq-HoTT, you can use the below after filling in th
 Bands.v
 BAut1.v
 Central.v
+CoHSpace.v
 Conn.v
 Cover.v
-EMspace.v
+EMSpace.v
+JoinLemmas.v
+KZ.v
 Lemmas.v
 misc.v
+ProjectiveLemmas.v
+ProjectiveSpaces.v
+Reflections.v
 SelfMaps.v
 Smallness.v
+Spheres.v
+ThomEuler.v
+Torsor.v
+TorsorTangent.v
 ```

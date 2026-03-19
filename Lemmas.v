@@ -166,6 +166,12 @@ Proof.
   assumption.
 Defined.
 
+Definition tr_concat (n : trunc_index) {A : Type} {x y z : A}
+  (p : Tr n (x = y)) (q : Tr n (y = z))
+  : Tr n (x = z).
+Proof.
+  strip_truncations.  exact (tr (p @ q)).
+Defined.
 
 Definition equiv_path_path_sigma_hprop {A : Type} {P : A -> Type} `{forall a, IsTrunc 0 (P a)}
   {X Y : sig P} (p q : X = Y)
@@ -313,13 +319,13 @@ Definition conn_point_elim_beta `{Univalence} (n : trunc_index) {A : pType@{u}} 
   : conn_point_elim n P p0 (point A) = p0.
 Proof.
   unfold conn_point_elim.
-  rewrite (contr (A:=Tr n (pt = pt)) (tr 1)).
-  reflexivity.
+  (* Since [Tr n (pt = pt)] is contractible, the center we chose is equal to [tr 1]. *)
+  exact (ap _ (contr (tr 1))).
 Defined.
 
 (** A converse to [isconnected_loops] when [A] is 0-connected. *)
 Definition isconnected_isconnected_loops `{Univalence} {n : trunc_index} (A : pType)
-  `{IsConnected 0%nat A} `{IsConnected n (loops A)}
+  `{IsConnected 0 A} `{IsConnected n (loops A)}
   : IsConnected n.+1 A.
 Proof.
   napply (conn_pointed_type (ispointed_type A)); hnf.
@@ -330,7 +336,7 @@ Defined.
 
 (** A variant in which [loops A] is only assumed to be equivalent to an n-connected type. *)
 Definition isconnected_isconnected_loops' `{Univalence} {n : trunc_index} {A B : pType}
-  `{IsConnected n A, IsConnected 0%nat B} (e : loops B <~> A)
+  `{IsConnected n A, IsConnected 0 B} (e : loops B <~> A)
   : IsConnected n.+1 B.
 Proof.
   rapply isconnected_isconnected_loops.
@@ -345,3 +351,19 @@ Definition equiv_path_from_contr_center {A : Type} (P : A -> Type)
            (b : A)
   : P b <~> (@center _ cp).1 = b
   := equiv_path_from_contr _ _ (@center _ cp).2 cp b.
+
+(** First, we record this idiom that comes up in the RHS of [ap_compose_dependent] and [apD_inverse]. It's a special case of [ap_transport], hence the name. But we specifically want a proof using [apD g p], rather than the trivial proof by induction on [p]. *)
+Definition ap_transport_toconst {A B} {P : A -> Type}
+  (g : forall a, P a -> B) {a0 a1 : A} (p : a0 = a1) (z : P a1)
+  : g a0 (p^ # z) = g a1 z
+  := (transport_arrow_toconst p (g a0) z)^ @ ap10 (apD g p) z.
+
+(* A lemma for computing [ap] of a dependent family of functions. The goal is to express the LHS in terms of [apD f] and [apD g]. *)
+Lemma ap_compose_dependent {A B} (P : A -> Type)
+  (f : forall a, P a) (g : forall a, P a -> B) {a0 a1 : A} (p : a0 = a1)
+  : ap (fun a => (g a) (f a)) p
+    = (ap ((g a0)) (apD f p^))^ @ ap_transport_toconst g p (f a1).
+Proof.
+  by destruct p.
+Defined.
+

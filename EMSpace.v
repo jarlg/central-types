@@ -1,8 +1,8 @@
-(** This material could go at the end of Homotopy.EMSpace.v. *)
+(** This material could go at the end of Homotopy/EMSpace.v. *)
 
 From HoTT Require Import HoTT.
 
-Require Import BAut1 Central.
+From CentralTypes Require Import BAut1 Central.
 
 Open Scope pointed_scope.
 

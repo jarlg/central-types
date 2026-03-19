@@ -1,7 +1,8 @@
 From HoTT Require Import Basics Types HFiber
-  Truncations.Core Pointed.Core Pointed.pEquiv Homotopy.HSpace.Core Homotopy.Cover WildCat.
+  Truncations.Core Truncations.SeparatedTrunc ReflectiveSubuniverse
+  Pointed.Core Pointed.pEquiv Homotopy.HSpace Homotopy.Cover WildCat.
 
-Require Import Lemmas HSpace SelfMaps Top.Cover BAut1.
+From CentralTypes Require Import Lemmas SelfMaps Cover BAut1.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -13,23 +14,25 @@ Local Open Scope path_scope.
 Section Central.
 
   (** We now assume that [A] is a central type and define an H-space structure on [BAut1 A], as in Theorem 4.19. *)
+  (* TODO: Many of the early result below are general facts about central types that have nothing to do with tensoring.  E.g. pointed_band_trivial.  They should be moved, maybe to Central.v, and maybe renamed as well. Possibly this file should depend on Central.v instead of the reverse.  Or maybe they should be merged. *)
 
   (* TODO: use `{Central A} here, which will mean reordering some things. *)
+  (* The hypothesis on [ev1'] is equivalent to centrality, but not literally the same. *)
   Universes u v.
-  Context `{Univalence} {A : pType@{u}} `{IsEquiv _ _ (ev1'@{u} A)}.
+  Context `{Univalence} {A : pType@{u}} `{!IsEquiv (ev1'@{u} A)}.
 
   Local Definition pequiv_ev1'
     : pcomp (A <~> A) equiv_idmap <~>* A
     := Build_pEquiv (ev1' A) _.
 
-  (** Under the hypotheses of this section, [ev_band] is an equivalence. *)
+  (** Under the hypotheses of this section, [ev_band] is an equivalence. This is Prop 4.12 in the paper. *)
   Local Instance isequiv_ev_band@{w}
     : forall X : BAut1@{u v} A, IsEquiv (ev_band@{u v w} X).
   Proof.
-    by rapply band_induction@{v v w}.
+    by rapply band_induction@{u v v w}.
   Defined.
 
-  Local Definition equiv_ev_band@{w}
+  Definition equiv_ev_band@{w}
     : forall X, pretensor_baut1@{u v w} pt X <~> X.1
     := fun X => Build_Equiv _ _ (ev_band@{u v w} X) (isequiv_ev_band@{w} X).
 
@@ -41,14 +44,14 @@ Section Central.
     : forall X, pretensor_baut1 pt X = X.1
     := fun X => path_universe_uncurried@{u u v} (equiv_ev_band X).
 
-  (** Consequently, any pointed tensor is trivial. *)
-  Definition pointed_tensor_trivial@{w} (Xp : BAut1@{u v} A)
+  (** Consequently, any pointed banded type is trivial. *)
+  Definition pointed_band_trivial@{w} (Xp : BAut1@{u v} A)
     : Xp.1 -> (pt = Xp) := (equiv_ev_band'@{w} Xp)^-1.
 
-  Definition pointed_tensor_trivial_comp@{w} {Xp : BAut1@{u v} A}
+  Definition pointed_band_trivial_comp@{w} {Xp : BAut1@{u v} A}
     : forall x, equiv_ev_band@{w} Xp
              ((equiv_pretensor_path_baut1 _ _ _)^-1
-                (pointed_tensor_trivial Xp x)) = x.
+                (pointed_band_trivial Xp x)) = x.
   Proof.
     intro x.
     refine (ap (equiv_ev_band Xp) _ @ _).
@@ -102,7 +105,7 @@ Section Central.
     rapply band_induction.
     refine (_ @ (concat_p1 _)^).
     unfold tensor_baut1, ".2".
-    refine (apD10 _ pt @ _); rapply band_induction_comp.
+    refine (apD10 _ pt @ _); rapply pcover_trunc_induction_comp.
   Defined.
 
   (** The point is a left unit for tensoring. *)
@@ -128,8 +131,8 @@ Section Central.
     destruct X as [X p], Y as [Y q].
     refine (_ oE equiv_functor_O_cover_from_point (equiv_equiv_inverse _ _) _).
     apply O_cover_change_center.
-    revert X p; rapply band_induction'.
-    revert Y q; rapply band_induction'.
+    revert X p; rapply band_induction_curried.
+    revert Y q; rapply band_induction_curried.
     reflexivity.
   Defined.
 
@@ -211,7 +214,7 @@ Section Central.
     srapply functor_sigma.
     1: apply equiv_inverse.
     simpl.
-    rapply band_induction'.
+    rapply pcover_trunc_induction_curried.
     apply (ap tr).
     by apply path_equiv.
   Defined.
@@ -222,7 +225,7 @@ Section Central.
     srapply functor_sigma.
     1: apply equiv_inverse.
     simpl.
-    rapply band_induction'@{u u v}.
+    rapply pcover_trunc_induction_curried@{u u v}.
     apply (ap tr).
     by apply path_equiv.
     (* [neg^-1] and [neg] are definitionally equal as functions! *)
@@ -292,7 +295,7 @@ Section Central.
     intros [X p].
     snapply path_hfiber.
     1: exact idpath.
-    revert X p; rapply band_induction'.
+    revert X p; rapply band_induction_curried.
     refine (_ @ (concat_1p _)^).
     unfold twist_baut1, pr2.
     refine (whiskerR (concat_1p _) _ @ _).
@@ -306,7 +309,7 @@ Section Central.
     intros [X p].
     snapply path_hfiber.
     1: exact (path_universe_uncurried (equiv_ev_band (X;p) oE baut1_symm _ _)).
-    revert X p; rapply band_induction'.
+    revert X p; rapply band_induction_curried.
     refine (_ @ ap _ (concat_1p _)^).
     refine (pr2_tensor_baut1 _ @ _).
     refine (concat_p1 _ @ _).

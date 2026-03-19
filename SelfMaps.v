@@ -2,12 +2,11 @@ From HoTT Require Import Basics Types Truncations Pointed
   Homotopy.HSpace Homotopy.Cover Homotopy.EvaluationFibration
   Tactics.EvalIn Modalities.ReflectiveSubuniverse.
 
-Require Import Lemmas Top.Cover.
+From CentralTypes Require Import Lemmas Cover.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
-
 
 (* TODO: I wonder about defining this to be [ev1 A o* pmap_comp_equiv_map pequiv_pmap_idmap], where the latter is the underlying pointed map of [pequiv_comp_equiv_map pequiv_pmap_idmap].  This is what comes up in isequiv_ev1'. *)
 Definition ev1' (A : pType)

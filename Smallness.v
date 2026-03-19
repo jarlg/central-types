@@ -6,8 +6,7 @@ From HoTT Require Import Basics Types.Unit Types.Sigma Types.Universe.
 From HoTT Require Import Universes.Smallness. (* Part has been merged into Coq-HoTT here. *)
 From HoTT Require Import HFiber Truncations Pointed.Core Pointed.Loops PropResizing.
 
-Require Import Conn.
-Require Import misc.
+From CentralTypes Require Import Conn misc.
 
 Open Scope trunc_scope.
 
@@ -24,6 +23,7 @@ Local Notation "n ..+2" := (trunc_index_to_nat n) (at level 2) : trunc_scope.
 (** TODO: Actually prove this, and put it somewhere more appropriate. *)
 Section JoinConstruction.
   Universes i j k.
+  (** TODO: Whoops, Coq doesn't make [Funext] and [ls] arguments to the Definitions/Instance, since they do not appear.  Fix. *)
   Context `{Funext} {X : Type@{i}} {Y : Type@{j}} (f : X -> Y)
           (ls : IsLocallySmall@{i j k} 1 Y).
   Definition jc_image@{} : Type@{i}. Admitted.
@@ -138,7 +138,6 @@ Proof.
     + exact sTrX.
     + intro y.
       rapply (issmall_truncmap_connected@{i j k u} n pr1).
-      rapply istruncmap_pr1.
 Defined.
 
 (** If [f : X -> Y] is (n+1)-truncated, the (n+1)-truncation of [X] is small and [Y] is (n+2)-locally small, then [X] is small. This is Corollary 2.7 from the paper. *)
