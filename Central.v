@@ -211,6 +211,17 @@ Proof.
   apply path_equiv; reflexivity.
 Defined.
 
+(** If [A] is [n]-truncated, then [BAut1 A] is [n+1]-truncated. *)
+Global Instance istrunc_baut1 `{Univalence} (A : pType) `{Central A}
+  (n : nat) `{IsTrunc n A}
+  : IsTrunc n.+1 (BAut1 A).
+Proof.
+  apply (equiv_istrunc_istrunc_loops n.-1 _)^-1.
+  change n.-1.+1 with (nat_to_trunc_index n).
+  rapply (conn_point_elim (-1) (A:=pBAut1 A)).
+  apply (istrunc_equiv_istrunc _ pequiv_loops_baut1^-1%equiv).
+Defined.
+
 (** We will frequently work with pointed, connected types. This could be a Record, but then we'd have to use issig in several places. *)
 Definition pcType@{u +} := { B : pType@{u} & IsConnected 0 B }.
 

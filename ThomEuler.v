@@ -74,9 +74,8 @@ Definition loop_susp_adjoint' `{Funext} (A B : pType)
   := issig_pmap_loops A B oE equiv_psusp_rec A B.
 
 Local Instance istrunc_BAut1_KZ `{Univalence} (n : nat)
-  : IsTrunc n.+2 (BAut1 (KZ n.+1)).
-(* TODO: Follows from this being a delooping. *)
-Admitted.
+  : IsTrunc n.+2 (BAut1 (KZ n.+1))
+  := istrunc_baut1 _ n.+1.
 
 Local Instance ishset_pmap_Sn_pBAut1_KZn `{Univalence} (n : nat) (X : BAut1@{u v} S^n.+1)
   : IsHSet (psusp@{u} X ->* (pBAut1@{u' v'} (KZ@{u'} n.+1))).
