@@ -73,8 +73,9 @@ Proof.
   match goal with |- equiv_fun (?e1^-1) == equiv_fun ?e2 =>
                     refine (equiv_inverse_homotopy e2^-1 e1 _) end.
   symmetry.
-  rapply Join_fam_beta_jglue_homotopy.
-  (* The last three lines can also be replaced with:
+  unfold tau_step; cbn.
+  exact (Join_fam_beta_jglue_homotopy _ (fun e' => Join E (IHtau e')) _ _ _).
+  (* The last four lines can also be replaced with:
   rewrite transport_tau_step'.
   reflexivity.
   *)
