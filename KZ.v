@@ -10,6 +10,7 @@ From CentralTypes Require Import BAut1 Central EMSpace Bands.
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
 
+(** Maybe this should be done in AbGroups.Z, without the Local annotation? *)
 Local Notation ZZ := abgroup_Z.
 
 (** Universes: could make [S^n] and [KZ n] land in the lowest universe [Set].  But we want to consider [BAut1{u v} S^n], with [u] not [Set], and this generates some goals that typeclass inference has trouble with.  So we'll let [S^n] and [KZ n] float. *)

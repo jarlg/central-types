@@ -11,6 +11,7 @@ From CentralTypes Require Import BAut1 Central EMSpace Bands KZ.
 Open Scope pointed_scope.
 Open Scope trunc_scope.
 
+(** Maybe this should be done in AbGroups.Z, without the Local annotation? *)
 Local Notation ZZ := abgroup_Z.
 
 Local Instance isconnected_Sn_band `{Univalence} (n : nat) (X : BAut1 S^n)

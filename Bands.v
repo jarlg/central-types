@@ -270,7 +270,7 @@ Section Central.
   Definition twist_baut1 : BAut1@{u v} A -> BAut1@{u v} A
     := fun X => (X.1; X.2 @ ap tr (path_universe_uncurried@{u u v} neg)).
 
-  Local Notation "X ^T" := (twist_baut1 X) (at level 5).
+  Local Notation "X ^T" := (twist_baut1 X) (at level 1).
 
   (** This goal comes up twice below, so we make a lemma for it. *)
   Lemma ap_tr_path_universe_neg_neg {n : trunc_index}

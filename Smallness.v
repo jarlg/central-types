@@ -16,7 +16,7 @@ Summary of the most common situation:  [i < k < u, j <= k], where [i] is for the
 
 We include universe annotations when they clarify the meaning (e.g. in [IsSmall] and when using [PropResizing]), and also when it is required in order to keep control of the universe variables. *)
 
-Local Notation "n ..+2" := (trunc_index_to_nat n) (at level 2) : trunc_scope.
+Local Notation "n ..+2" := (trunc_index_to_nat n) (at level 1) : trunc_scope.
 
 (** Rijke's join construction, taken as an axiom. Egbert assumes [Funext] globally, so we assume it here. Not 100% sure that is needed. This has been formalized by Valery Isaev in the Arend Standard Library available at https://github.com/JetBrains/arend-lib.  See the file Homotopy/Image.ard. *)
 (** TODO: delete the version in Modalities.Truncated when I merge this.  My version uses my set-up, to avoid assuming that [i < j]. *)
