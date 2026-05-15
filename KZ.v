@@ -33,9 +33,16 @@ Definition istrunc_KZ (n : nat) : IsTrunc n (KZ n) := _.
 Global Instance isconnected_KZ (n : nat) : IsConnected n.-1 (KZ n)
   := ltac:(destruct n; exact _).
 
-(** TODO: fill in *)
 Definition equiv_KZ_EM `{Univalence} (n : nat) : KZ n <~>* K(ZZ, n).
-Admitted.
+Proof.
+  destruct n.
+  1: symmetry; rapply pequiv_ptr.
+  refine (_ o*E (pequiv_em_connected_truncated _ n)^-1* ).
+  apply pequiv_em_group_iso.
+  refine (pin_sn _ $oE _).
+  unfold KZ.
+  symmetry; apply grp_iso_pi_Tr.
+Defined.
 
 Global Instance ishspace_KZ `{Univalence} (n : nat)
   : IsHSpace (KZ n).
@@ -55,7 +62,7 @@ Global Instance central_KZ `{Univalence} (n : nat)
   : Central (KZ@{u} n.+1).
 Proof.
   nrefine (central_pequiv_central (equiv_KZ_EM n.+1)^-1* ).
-  apply central_em.
+  napply central_em.
 Defined.
 
 Definition pi_KZ `{Univalence} (n : nat) : Pi n (KZ n) <~>* ZZ.
