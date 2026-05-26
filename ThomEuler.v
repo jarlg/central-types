@@ -39,7 +39,7 @@ Defined.
 
 (** We give a different proof of [loop_susp_adjoint].  Here's one based on the non-exported one in pSusp.v, but factored into two, and made shorter using [make_equiv]. *)
 
-(** First we go partway. *)
+(** First we go partway. [BCM:lem:transpose] *)
 Definition equiv_psusp_rec `{Funext} (A : Type) (B : pType)
   : (psusp A ->* B) <~> { b : B & A -> pt = b }.
 Proof.
@@ -90,6 +90,7 @@ Proof.
 Defined.
 (* Note that as an unpointed equivalence, [pequiv_loops_baut1] is equal to [equiv_ev_band' pt] which is used below. We can't use one in both places, since we need a pointed equivalence here and one that works for all bands later. *)
 
+(** This is the canonical generator, since the way [pBAut1 (KZ n.+1)] has the structure of a K(Z, n.+2) is via the equivalence [pequiv_loops_baut1] used in the previous result. *)
 (** TODO: verify that this corresponds to [ptr] after composing with the centrality equivalence. *)
 Definition generator_BAut1_KZ `{Univalence} (n : nat)
   : S^n.+2 ->* pBAut1 (KZ n.+1).
@@ -98,8 +99,9 @@ Proof.
   apply generator_loops_BAut1_KZ.
 Defined.
 
-(** A variant, where we model [KZ n.+2] using [BAut1]. I think this corresponds to one of the variants in the current draft. *)
-(** TODO: show that after composing with the centrality equivalence, these agree. *)
+(** Another definition of the Thom class, using the [BAut1] model of K(Z, n+2).  By [BCM:rmk:thom-class], this agrees with \tilde{th}^*(Σ, N), as mentioned after diagram [BCM:eqn:thom.triangle], using the notation from [BCM:defn:thom.class]. *)
+(** Note that [X] could be generalized to anything in BAut_1 of the universe of pointed types, but we haven't defined BAut_1 in that generality in the formalization. *)
+(** TODO: show that after composing with the centrality equivalence, this agrees with [thom_class]. *)
 Definition thom_class_BAut1 `{Univalence} (n : nat) (X : BAut1 S^n.+1)
   : psusp X ->* pBAut1 (KZ n.+1).
 Proof.
@@ -128,18 +130,20 @@ Definition tr_path (m : nat) {F : Type -> Type} {X Y : Type} (p : @tr m _ X = @t
   := ap (Trunc_functor m F) p.
 
 (** The Euler class *)
-(* [BCM:defn:euler.class] *)
+(** [BCM:defn:euler.class] *)
 Definition euler {n : nat} (X : BAut1 S^n.+1) : BAut1 (KZ n.+1)
   := (Tr n.+1 X.1; tr_path 1 X.2).
 
-Local Instance ishset_pmap_sigma `{Univalence} (n : nat) (X : Type) `{IsConnected n X}
-  : IsHSet { K : BAut1 (KZ n.+1) & X -> (pt = K :> pBAut1 (KZ n.+1)) }.
+(** [BCM:lem:transpose.set] *)
+Local Instance ishset_pmap_sigma `{Univalence} (n : nat) (X : Type) (Y : pType)
+  `{IsConnected n X} `{IsTrunc n.+2 Y}
+  : IsHSet { p : Y & X -> (pt = p) }.
 Proof.
-  nrefine (istrunc_equiv_istrunc _ (equiv_psusp_rec X (pBAut1 (KZ n.+1)))).
+  nrefine (istrunc_equiv_istrunc _ (equiv_psusp_rec X Y)).
   rapply (ishset_pmap n.+1).
 Defined.
 
-(** This is another version, landing in a Sigma-type which is equivalent (by [equiv_psusp_rec]) to the type of pointed functions.  We'll show that it agrees with [thom_class_BAut1]. *)
+(** This is another version of the Thom class, landing in a Sigma-type which is equivalent (by [equiv_psusp_rec]) to the type of pointed functions.  We'll show that it agrees with [thom_class_BAut1]. [BCM:defn:second.thom.class] *)
 Definition thom_class_sigma `{Univalence} (n : nat) (X : BAut1 S^n.+1)
   : { K : BAut1 (KZ n.+1) & X -> (pt = K :> pBAut1 (KZ n.+1)) }.
 Proof.
@@ -165,6 +169,7 @@ Proof.
   symmetry; apply pequiv_loops_baut1_equiv_ev_band'.
 Defined.
 
+(** [BCM:thm:thom.classes.agree] *)
 Definition thom_classes_agree `{Univalence} (n : nat) (X : BAut1 S^n.+1)
   : equiv_psusp_rec _ _ (thom_class_BAut1 n X) = thom_class_sigma n X.
 Proof.
@@ -188,8 +193,7 @@ Proof.
   apply eisretr.
 Defined.
 
-(** It follows that our [BAut1] definition produces the Euler class when evaluated on [South]. *)
-(* [BCM:cor:thom.euler], up to comparing how the Thom classes are defined *)
+(** It follows that our [BAut1] definition produces the Euler class when evaluated on [South]. By [BCM:eqn:thom.triangle], this corresponds to pulling back along the zero-section. This is [BCM:cor:thom.euler]. *)
 Definition thom_euler `{Univalence} (n : nat) (X : BAut1 S^n.+1)
   : thom_class_BAut1 n X South = euler X.
 Proof.
