@@ -24,6 +24,9 @@ Local Instance ishset_pmap_Sn_KZn `{Univalence} (n : nat) (X : BAut1 S^n)
   : IsHSet (psusp X ->* KZ n.+1)
   := istrunc_pmap (m:=n.-1) _ _.
 
+(** TODO: This is currently unused, but should be compared to the other definitions given below. *)
+(** By [BCM:rmk:thom-class], this agrees with \tilde{th}^*(Σ, N), as mentioned after diagram [BCM:eqn:thom.triangle], using the notation from [BCM:defn:thom.class]. *)
+(** Note that this could be generalized to anything in BAut_1 of the universe of pointed types, but we haven't defined BAut_1 in that generality in the formalization. *)
 Definition thom_class `{Univalence} (n : nat) (X : BAut1 S^n.+1)
   : psusp X ->* KZ n.+2.
 Proof.
