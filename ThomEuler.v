@@ -32,7 +32,7 @@ Proof.
   exact ptr.
 Defined.
 
-(** We give a different proof of [loop_susp_adjoint].  Here's one based on the non-exported one in pSusp.v, but factored into two, and made shorter using [make_equiv_contr_basedpaths]. *)
+(** We give a different proof of [loop_susp_adjoint].  Here's one based on the non-exported one in pSusp.v, but factored into two, and made shorter using [make_equiv]. *)
 
 (** First we go partway. *)
 Definition equiv_psusp_rec `{Funext} (A : Type) (B : pType)
@@ -61,8 +61,7 @@ Definition issig_pmap_loops (A B : pType)
   : { b : B & A -> pt = b } <~> (A ->* loops B).
 Proof.
   transitivity {bp : {b:B & point B = b} & {f : A -> point B = bp.1 & f (point A) = bp.2} }.
-  1: make_equiv_contr_basedpaths.
-  make_equiv_contr_basedpaths.
+  all: make_equiv_contr_basedpaths.
 Defined.
 
 Definition issig_pmap_loops_inv_beta (A B : pType) (f : A ->* loops B)
@@ -123,6 +122,8 @@ Definition thom_class_BAut1_beta `{Univalence} (n : nat)
     tr m |                | tr m
          v                v
       ||Type||_m ----> ||Type||_m
+
+    where the bottom row is [Trunc_functor m F].
 
     In our case, [m] is [1] and [F] is itself a truncation operation [Tr n.+1].  The proof below works because the square commutes definitionally. *)
 Definition tr_path (m : nat) {F : Type -> Type} {X Y : Type} (p : @tr m _ X = @tr m _ Y)
