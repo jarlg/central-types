@@ -20,8 +20,10 @@ Proof.
   revert X; rapply band_induction; exact _.
 Defined.
 
-Local Instance ishset_pmap_Sn_KZn `{Univalence} (n : nat) (X : BAut1 S^n)
-  : IsHSet (psusp X ->* KZ n.+1)
+(** This instance is useful because Rocq can't guess the [n.-1] argument to [istrunc_pmap], but even so it has no principled way to guess the argument [n] here. *)
+Local Instance ishset_pmap `{Univalence} (n : nat) (X Y : pType)
+  `{IsConnected n X} `{IsTrunc n.+1 Y}
+  : IsHSet (X ->* Y)
   := istrunc_pmap (m:=n.-1) _ _.
 
 (** TODO: This is currently unused, but should be compared to the other definitions given below. *)
@@ -79,14 +81,6 @@ Definition loop_susp_adjoint' `{Funext} (A B : pType)
 Local Instance istrunc_BAut1_KZ `{Univalence} (n : nat)
   : IsTrunc n.+2 (BAut1 (KZ n.+1))
   := istrunc_baut1 _ n.+1.
-
-Local Instance ishset_pmap_Sn_pBAut1_KZn `{Univalence} (n : nat) (X : BAut1@{u v} S^n.+1)
-  : IsHSet (psusp@{u} X ->* (pBAut1@{u' v'} (KZ@{u'} n.+1))).
-Proof.
-  rapply (istrunc_pmap (m:=n)).
-  napply isconnected_susp.
-  apply (isconnected_Sn_band (n.+1)).
-Defined.
 
 Definition generator_loops_BAut1_KZ `{Univalence} (n : nat)
   : S^n.+1 ->* loops (pBAut1 (KZ n.+1)).
