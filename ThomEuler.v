@@ -132,10 +132,12 @@ Definition tr_path (m : nat) {F : Type -> Type} {X Y : Type} (p : @tr m _ X = @t
 Definition euler {n : nat} (X : BAut1 S^n.+1) : BAut1 (KZ n.+1)
   := (Tr n.+1 X.1; tr_path 1 X.2).
 
-(* In all of these "ishset" results, instead of assuming that X is in BAut1 S^n.+1, we could assume that X is n-connected. We could add the ishset version of istrunc_pmap as a local instance. *)
-Local Instance ishset_pmap_sigma `{Univalence} (n : nat) (X : BAut1 S^n.+1)
-  : IsHSet { K : BAut1 (KZ n.+1) & X -> (pt = K :> pBAut1 (KZ n.+1)) }
-  := istrunc_equiv_istrunc _ (equiv_psusp_rec X (pBAut1 (KZ n.+1))).
+Local Instance ishset_pmap_sigma `{Univalence} (n : nat) (X : Type) `{IsConnected n X}
+  : IsHSet { K : BAut1 (KZ n.+1) & X -> (pt = K :> pBAut1 (KZ n.+1)) }.
+Proof.
+  nrefine (istrunc_equiv_istrunc _ (equiv_psusp_rec X (pBAut1 (KZ n.+1)))).
+  rapply (ishset_pmap n.+1).
+Defined.
 
 (** This is another version, landing in a Sigma-type which is equivalent (by [equiv_psusp_rec]) to the type of pointed functions.  We'll show that it agrees with [thom_class_BAut1]. *)
 Definition thom_class_sigma `{Univalence} (n : nat) (X : BAut1 S^n.+1)
