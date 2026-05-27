@@ -165,7 +165,7 @@ Proof.
   set (KZ := point (pBAut1 (KZ n.+1))).
   change ((equiv_ev_band' KZ)^-1 o tr = pequiv_loops_baut1^-1 o tr).
   (* So it's enough to show that the two equivalences being inverted are equal. *)
-  tapply (ap (y:=pequiv_loops_baut1) (fun e : KZ = KZ <~> KZ.1 => e^-1 o tr)).
+  tapply (ap (y:=pequiv_loops_baut1) (fun e : (KZ = KZ) <~> KZ.1 => e^-1 o tr)).
   symmetry; apply pequiv_loops_baut1_equiv_ev_band'.
 Defined.
 
