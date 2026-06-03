@@ -143,7 +143,7 @@ Proof.
   rapply (ishset_pmap n.+1).
 Defined.
 
-(** This is another version of the Thom class, landing in a Sigma-type which is equivalent (by [equiv_psusp_rec]) to the type of pointed functions.  We'll show that it agrees with [thom_class_BAut1]. [BCM:defn:second.thom.class] *)
+(** This is another version of the Thom class, landing in a Sigma-type which is equivalent (by [equiv_psusp_rec]) to the type of pointed functions.  We'll show that it agrees with [thom_class_BAut1]. [BCM:defn:second.thom.class] (denoted th'_{n+2} in the paper). *)
 Definition thom_class_sigma `{Univalence} (n : nat) (X : BAut1 S^n.+1)
   : { K : BAut1 (KZ n.+1) & X -> (pt = K :> pBAut1 (KZ n.+1)) }.
 Proof.
@@ -155,8 +155,10 @@ Proof.
   exact (equiv_ev_band' (euler X))^-1.
 Defined.
 
+(** We show how this computes when [X] is the standard (n+1)-sphere.  In the following, we could write [pt] in both places, but we are more explicit to help the reader. *)
 Definition thom_class_sigma_beta `{Univalence} (n : nat)
-  : thom_class_sigma n pt = (pt; pointed_fun (generator_loops_BAut1_KZ n)).
+  : thom_class_sigma n (point (BAut1 S^n.+1))
+    = (point (BAut1 (KZ n.+1)); pointed_fun (generator_loops_BAut1_KZ n)).
 Proof.
   unfold thom_class_sigma.
   (* The first components are definitionally equal, so we can do: *)
