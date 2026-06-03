@@ -134,7 +134,7 @@ Definition tr_path (m : nat) {F : Type -> Type} {X Y : Type} (p : @tr m _ X = @t
 Definition euler {n : nat} (X : BAut1 S^n.+1) : BAut1 (KZ n.+1)
   := (Tr n.+1 X.1; tr_path 1 X.2).
 
-(** [BCM:lem:transpose.set] *)
+(** No longer used. *)
 Local Instance ishset_pmap_sigma `{Univalence} (n : nat) (X : Type) (Y : pType)
   `{IsConnected n X} `{IsTrunc n.+2 Y}
   : IsHSet { p : Y & X -> (pt = p) }.
@@ -175,24 +175,21 @@ Defined.
 Definition thom_classes_agree `{Univalence} (n : nat) (X : BAut1 S^n.+1)
   : equiv_psusp_rec _ _ (thom_class_BAut1 n X) = thom_class_sigma n X.
 Proof.
+  apply moveR_equiv_M.
   revert X; rapply band_induction.
-  rhs napply thom_class_sigma_beta.
-  rewrite thom_class_BAut1_beta.
-  (* The next three lines are all definitional equalities. *)
+  rewrite thom_class_sigma_beta.
+  napply thom_class_BAut1_beta.
+  (* For more details, undo the last line, and see how things unfold:
+  Undo.
+  lhs napply thom_class_BAut1_beta.
   unfold generator_BAut1_KZ, loop_susp_adjoint'.
   (* The inverse of the composite is the composite of the inverses. *)
-  change (_ = ?R) with (equiv_psusp_rec S^n.+1 (pBAut1 (KZ n.+1))
-                         ((equiv_psusp_rec S^n.+1 (pBAut1 (KZ n.+1)))^-1
-                           ((issig_pmap_loops S^n.+1 (pBAut1 (KZ n.+1)))^-1
-                             (generator_loops_BAut1_KZ n))) = R).
-  (* This changes the LHS further to [equiv_psusp_rec S^ n.+1 (pBAut1 (KZ n.+1)) ((equiv_psusp_rec S^ n.+1 (pBAut1 (KZ n.+1)))^-1 (pt; generator_loops_BAut1_KZ n))]. The RHS is *)
+  change (_ = ?R) with ((equiv_psusp_rec S^n.+1 (pBAut1 (KZ n.+1)))^-1
+                          ((issig_pmap_loops S^n.+1 (pBAut1 (KZ n.+1)))^-1
+                             (generator_loops_BAut1_KZ n)) = R).
+  (* The [equiv_psusp_rec]s exactly map, and the inverse of [issig_pmap_loops] takes a pointed map to [(pt; f)], as shown by this definitional equality: *)
   rewrite_refl issig_pmap_loops_inv_beta.
-  (* Goal: [equiv_psusp_rec S^ n.+1 (pBAut1 (KZ n.+1))
-             ((equiv_psusp_rec S^ n.+1 (pBAut1 (KZ n.+1)))^-1
-               (pt; generator_loops_BAut1_KZ n))
-             = (pt; generator_loops_BAut1_KZ n)] *)
-  (* We cancel the equivalence and its inverse. *)
-  apply eisretr.
+  reflexivity. *)
 Defined.
 
 (** It follows that our [BAut1] definition produces the Euler class when evaluated on [South]. By [BCM:eqn:thom.triangle], this corresponds to pulling back along the zero-section. This is [BCM:cor:thom.euler]. *)
