@@ -9,7 +9,7 @@ Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
 Local Open Scope path_scope.
 
-(** ** Tensoring bands *)
+(** * The H-space structure on [BAut1 A] *)
 
 Section Central.
 
@@ -58,6 +58,8 @@ Section Central.
     1: exact (eissect (equiv_pretensor_path_baut1 _ _ _) _).
     apply eisretr.
   Defined.
+
+  (** ** Tensoring bands *)
 
   (** The ("untwisted") tensor operation on bands. *)
   Proposition tensor_baut1
@@ -184,7 +186,7 @@ Section Central.
     napply eisretr.
   Defined.
 
-  (** The negation map lets us move between path components of [(A <~> A)]. We define it in two steps to get rid of three universe variables. *)
+  (** The negation map lets us move between path components of [(A <~> A)]. We define this in two steps to get rid of three universe variables. *)
   Definition neg_precompose'
     : pcomp (A <~> A) 1%equiv <~>* pcomp (A <~> A) neg.
   Proof.
