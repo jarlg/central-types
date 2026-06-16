@@ -2,17 +2,12 @@ From HoTT Require Import Basics Types.Sigma Types.Universe Tactics.EvalIn Pointe
   Algebra.AbGroups.Z Truncations.Core Truncations.Connectedness
   Spaces.Spheres Homotopy.Suspension.
 
-From CentralTypes Require Import BAut1 Central EMSpace Bands KZ.
+From CentralTypes Require Import BAut1 Central EMSpace Bands KZ Euler.
 
-(** * The Thom class and the Euler class *)
-
-(** TODO: separate out Euler class material? *)
+(** * The Thom class and its relation to the Euler class *)
 
 Open Scope pointed_scope.
 Open Scope trunc_scope.
-
-(** Maybe this should be done in AbGroups.Z, without the Local annotation? *)
-Local Notation ZZ := abgroup_Z.
 
 Local Instance isconnected_Sn_band `{Univalence} (n : nat) (X : BAut1 S^n)
   : IsConnected n.-1 X.
@@ -112,27 +107,6 @@ Defined.
 Definition thom_class_BAut1_beta `{Univalence} (n : nat)
   : thom_class_BAut1 n pt = generator_BAut1_KZ n
   := pcover_trunc_induction_comp _ _.
-
-(** The general situation involved in defining the Euler class:
-
-                   F
-        Type ----------> Type
-         |                |
-    tr m |                | tr m
-         v                v
-      ||Type||_m ----> ||Type||_m
-
-    where the bottom row is [Trunc_functor m F].
-
-    In our case, [m] is [1] and [F] is itself a truncation operation [Tr n.+1].  The proof below works because the square commutes definitionally. *)
-Definition tr_path (m : nat) {F : Type -> Type} {X Y : Type} (p : @tr m _ X = @tr m _ Y)
-  : @tr m _ (F X) = @tr m _ (F Y)
-  := ap (Trunc_functor m F) p.
-
-(** The Euler class *)
-(** [BCM:defn:euler.class] *)
-Definition euler {n : nat} (X : BAut1 S^n.+1) : BAut1 (KZ n.+1)
-  := (Tr n.+1 X.1; tr_path 1 X.2).
 
 (** No longer used. *)
 Local Instance ishset_pmap_sigma `{Univalence} (n : nat) (X : Type) (Y : pType)

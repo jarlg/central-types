@@ -16,7 +16,8 @@ The notable results in this repository are:
 Notable results from the BCM paper are:
 
 - Results on co-H-spaces, in [`CoHSpace.v`](./CoHSpace.v).
-- Definitions of the Euler class and Thom class and their relationship,
+- Definition of the Euler class, in [`Euler.v`](./Euler.v).
+- Definition of the Thom class and its relationship to the Euler class,
   in [`ThomEuler.v`](./ThomEuler.v).
 - All of the material on reflections, in [`Reflections.v`](./Reflections.v).
 - The general tangent bundle construction, in [`TorsorTangent.v`](./TorsorTangent.v),
