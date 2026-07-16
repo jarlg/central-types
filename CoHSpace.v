@@ -13,7 +13,8 @@ Class IsCoHSpace (X : pType) := {
 - Not sure about left/right identity naming.
 - Is it correct to have the cohspace_op map be pointed?
 - Do we want pointed homotopies?
-- In general, there should be a coherence.
+- Do we need any additional coherence?  Probably not, and a proof that
+  [X ->* Y] is a *coherent* H-space for any [Y : pType] would confirm this.
 *)
 
 Arguments wedge_inl & {X Y}.
@@ -105,6 +106,26 @@ Proof.
       exact (concat_p_pp _ _ _ @@ 1).
   - simpl.
     symmetry; apply concat_pp_V.
+Defined.
+
+(** The type of pointed maps from a co-H-space is an H-space under [cohspace_sum]. *)
+Instance ishspace_pmap_from_cohspace `{Funext} (X Y : pType) `{IsCoHSpace X}
+  : IsHSpace (X ->** Y).
+Proof.
+  snapply Build_IsHSpace.
+  - exact cohspace_sum.
+  - intro g.
+    apply path_pforall.
+    unfold cohspace_sum.
+    refine (pmap_prewhisker cohspace_op (wedge_rec_pconst_l g) @* _).
+    refine (pmap_compose_assoc _ _ _ @* _).
+    exact (pmap_postwhisker _ cohspace_right_identity @* pmap_precompose_idmap _).
+  - intro f.
+    apply path_pforall.
+    unfold cohspace_sum.
+    refine (pmap_prewhisker cohspace_op (wedge_rec_pconst_r f) @* _).
+    refine (pmap_compose_assoc _ _ _ @* _).
+    exact (pmap_postwhisker _ cohspace_left_identity @* pmap_precompose_idmap _).
 Defined.
 
 (* Next:
