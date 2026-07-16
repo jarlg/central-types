@@ -1,4 +1,9 @@
-Require Import HoTT.
+From HoTT Require Import Basics Types Pointed
+  Homotopy.Wedge Homotopy.HSpace Homotopy.Suspension.
+
+From CentralTypes Require Import Wedge.
+
+Open Scope pointed_scope.
 
 (** * Co-H-spaces *)
 
