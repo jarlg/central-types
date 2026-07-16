@@ -2,7 +2,7 @@ Require Import HoTT.
 
 (** * Co-H-spaces *)
 
-(* [BCM:defn:cohspace] *)
+(** [BCM:defn:cohspace] *)
 Class IsCoHSpace (X : pType) := {
   cohspace_op : X ->* X \/ X;
   cohspace_left_identity : wedge_pr1 o* cohspace_op ==* pmap_idmap;
@@ -19,7 +19,7 @@ Class IsCoHSpace (X : pType) := {
 Arguments wedge_inl & {X Y}.
 Arguments wedge_inr & {X Y}.
 
-(* [BCM:prop:iscohspace-susp] *)
+(** [BCM:prop:iscohspace-susp] *)
 Instance iscohspace_susp (X : pType) : IsCoHSpace (psusp X).
 Proof.
   snapply Build_IsCoHSpace.
@@ -66,7 +66,7 @@ Proof.
     + reflexivity.
 Defined.
 
-(* [BCM:defn:cohspace-sum] *)
+(** [BCM:defn:cohspace-sum] *)
 Definition cohspace_sum {X Y : pType} `{IsCoHSpace X}
   (f g : X ->* Y) : X ->* Y
   := wedge_rec f g o* cohspace_op.
@@ -83,7 +83,7 @@ Proof.
   - exact (point_eq f).
 Defined.
 
-(* [BCM:cor:sum-susp] *)
+(** [BCM:cor:sum-susp] *)
 Definition cohspace_sum_susp {X Y : pType}
   (f g : psusp X ->* Y)
   : cohspace_sum f g ==* sum_susp f g.
