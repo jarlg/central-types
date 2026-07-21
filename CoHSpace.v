@@ -215,6 +215,52 @@ Proof.
     (leftidentity_pmap g) (rightidentity_pmap f)).
   rapply sgop_pmap_agree.
 Defined.
+
+(** ** The [n]-truncation functor preserves the H-space structure *)
+
+(** When [A] is a co-H-space and the n-truncation of [B] is a coherent H-space, the n-truncation functor sends the [sgop_pmap_cohspace] operation on [A ->* B] to the pointwise sum [sgop_pmap] on [pTr n A ->* pTr n B]. Both sides are determined by their precomposite with [ptr : A ->* pTr n A] (as [pTr n B] is [n]-truncated), so by [pTr_ind_homotopy] the claim reduces to [sgop_pmap_agree] via naturality of [ptr]. Put another way, we are using the triangle
+<<
+          (A ->* B)  ----> (pTr n A ->* pTr n B)
+               \             /
+                \           /
+                 v         v
+                (A ->* pTr n B)
+>>
+The diagonal maps are post- and pre-composition with a [ptr] map and so respect the operations [sgop_pmap_cohspace] and [sgop_pmap], respectively.  Those operations agree on the bottom type, and the right-hand diagonal map is an equivalence, so the top map respects the operations as well. *)
+Definition ptr_functor_sgop_pmap {n : trunc_index} {A B : pType}
+  `{IsCoHSpace A} `{IsCoherent (pTr n B)} (f g : A ->* B)
+  : fmap (pTr n) (sgop_pmap_cohspace f g)
+    ==* sgop_pmap (fmap (pTr n) f) (fmap (pTr n) g).
+Proof.
+  rapply pTr_indpaths.
+  lhs' napply (ptr_natural n (sgop_pmap_cohspace f g)).
+  lhs' napply sgop_pmap_cohspace_postcompose.
+  lhs' rapply sgop_pmap_agree.
+  rhs' napply sgop_pmap_precompose.
+  exact (sgop_pmap_phomotopy (ptr_natural n f)^* (ptr_natural n g)^*).
+Defined.
+
+(** If in addition [A] has a co-H-space inverse [r] and [pTr n B] is left-invertible and has an inverse [s], then [n]-truncation carries the induced inverse on [A ->* B] (precomposition with [r]) to the induced inverse on [pTr n A ->* pTr n B] (postcomposition with [s]). Both [fmap (pTr n) (f o* r)] and [s o* fmap (pTr n) f] are right inverses of [fmap (pTr n) f] under [sgop_pmap], and these are unique because [pTr n A ->* pTr n B] is left-invertible. *)
+Definition ptr_functor_ishspaceinverse `{Funext} {n : trunc_index}
+  {A B : pType} `{IsCoHSpace A} `{IsCoherent (pTr n B)}
+  `{forall y : pTr n B, IsEquiv (y *.)}
+  {r : A ->* A} (hr : IsCoHSpaceInverse r)
+  {s : pTr n B ->* pTr n B} (hs : IsHSpaceInverse s)
+  (f : A ->* B)
+  : fmap (pTr n) (f o* r) ==* s o* fmap (pTr n) f.
+Proof.
+  apply phomotopy_path.
+  pose (fmap_f := fmap (pTr n) f);
+    rapply (equiv_inj (sg_op fmap_f));
+    unfold fmap_f; clear fmap_f.
+  1: rapply isleftinvertible_hspace_pmap.
+  apply path_pforall.
+  lhs_V' rapply ptr_functor_sgop_pmap.
+  lhs' tapply (fmap2 (pTr n) (iscohspaceinverse_pmap hr f)).
+  lhs' napply ptr_functor_pconst.
+  symmetry; apply (ishspaceinverse_pmap hs).
+Defined.
+
 (** ** Suspensions as co-H-spaces *)
 
 (** [BCM:prop:iscohspace-susp] *)
