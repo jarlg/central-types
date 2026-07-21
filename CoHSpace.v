@@ -88,6 +88,60 @@ Proof.
   - intro f; exact (path_pforall (rightidentity_pmap_cohspace f)).
 Defined.
 
+Class IsHSpaceMap {X Y : pType} `{IsHSpace X} `{IsHSpace Y} (f : X ->* Y) := {
+  (* I'm not sure why Rocq gets confused if I use [*] in the next line for the operation on [Y]. *)
+  preserves_hspace_op : forall x y : X, f (x * y) = hspace_op (f x) (f y);
+  preserves_left_identity : forall x : X, ap f (hspace_left_identity x)
+                                     = preserves_hspace_op pt x @ ap (.* f x) (point_eq f) @ hspace_left_identity (f x);
+  preserves_right_identity : forall x : X, ap f (hspace_right_identity x)
+                                      = preserves_hspace_op x pt @ ap (f x *.) (point_eq f) @ hspace_right_identity (f x);
+}.
+
+(** ** Inverse maps *)
+
+(** [r] is an inverse map for the H-space [X] if it is a right inverse of [pmap_idmap] in [X ->* X] under the pointwise sum [sgop_pmap]. Unfolding [==*], this is the pointwise condition [x * r x = pt] together with a coherence at the base point identifying its value there with [left_identity (r pt) @ point_eq r]. This makes the definition dual to [IsCoHSpaceInverse] and, unlike a bare pointwise condition, uses the pointedness of [r]. The underlying relation [x * y = pt] is preserved by H-space maps (see [hspace_map_preserves_inverse]). *)
+Definition IsHSpaceInverse {X : pType} `{IsHSpace X} (r : X ->* X) : Type
+  := sgop_pmap pmap_idmap r ==* pconst.
+
+(** Dually, [r] is an inverse map for the co-H-space [X] if it is a right inverse of [pmap_idmap] in [X ->* X] under [sgop_pmap_cohspace]. *)
+Definition IsCoHSpaceInverse {X : pType} `{IsCoHSpace X} (r : X ->* X) : Type
+  := sgop_pmap_cohspace pmap_idmap r ==* pconst.
+
+(** Inverse maps for a left-invertible H-space are unique, since [r x] is the unique right inverse of [x]. This lets us prove two maps equal by showing both are inverse maps. *)
+Definition homotopic_ishspaceinverse `{Funext} {X : pType} `{IsHSpace X}
+  `{forall x : X, IsEquiv (x *.)}
+  {r s : X ->* X} (hr : IsHSpaceInverse r) (hs : IsHSpaceInverse s)
+  : r ==* s.
+Proof.
+  apply hspace_phomotopy_from_homotopy.
+  intro x.
+  exact (equiv_inj (x *.) (hr x @ (hs x)^)).
+Defined.
+
+(** An H-space map sends inverse pairs to inverse pairs: if [x * y = pt] then [f x * f y = pt]. This uses only that [f] preserves the operation and the base point. *)
+Definition hspace_map_preserves_inverse {X Y : pType} `{IsHSpace X} `{IsHSpace Y}
+  (f : X ->* Y) `{!IsHSpaceMap f} {x y : X} (p : x * y = pt)
+  : f x * f y = pt.
+Proof.
+  lhs_V rapply preserves_hspace_op.
+  lhs napply (ap f p).
+  exact (point_eq f).
+Defined.
+
+(** Consequently, an H-space map into a left-invertible H-space commutes with inverse maps: [f (r x)] is the inverse of [f x]. Writing [-] for the inverse, this is [f (- x) = - (f x)]. *)
+Definition hspacemap_ishspaceinverse {X Y : pType} `{IsHSpace X} `{IsHSpace Y}
+  `{forall y : Y, IsEquiv (y *.)}
+  (f : X ->* Y) `{!IsHSpaceMap f}
+  {r : X ->* X} (hr : IsHSpaceInverse r)
+  {s : Y ->* Y} (hs : IsHSpaceInverse s)
+  : forall x : X, f (r x) = s (f x).
+Proof.
+  intro x.
+  rapply (equiv_inj (f x *.)).
+  lhs rapply (hspace_map_preserves_inverse f (hr x)).
+  symmetry; napply hs.
+Defined.
+
 (** ** Suspensions as co-H-spaces *)
 
 (** [BCM:prop:iscohspace-susp] *)
@@ -171,6 +225,31 @@ Proof.
       exact (concat_p_pp _ _ _ @@ 1).
   - simpl.
     symmetry; apply concat_pp_V.
+Defined.
+
+(** The negation map [susp_neg] of a suspension is pointed, via the meridian at the base point. *)
+Definition psusp_neg {X : pType} : psusp X ->* psusp X
+  := Build_pMap (susp_neg X) (merid pt)^.
+
+(** Suspensions have inverses: [psusp_neg] is an inverse map for the co-H-space [psusp X]. *)
+Definition iscohspaceinverse_psusp_neg {X : pType}
+  : IsCoHSpaceInverse (@psusp_neg X).
+Proof.
+  unfold IsCoHSpaceInverse.
+  lhs' napply sgop_pmap_cohspace_susp.
+  snapply Build_pHomotopy.
+  - snapply Susp_ind_FlFr.
+    1, 2: reflexivity.
+    intro x.
+    apply equiv_p1_1q.
+    rhs napply ap_const.
+    cbn.
+    lhs napply Susp_rec_beta_merid.
+    lhs napply (((ap_idmap _ @@ 1) @@ inv_V _) @@ Susp_rec_beta_merid (H_N:=South) x).
+    lhs napply ((concat_p1 _ @@ 1) @@ 1).
+    lhs napply (concat_pV_p _ _ @@ 1).
+    napply concat_pV.
+  - reflexivity.
 Defined.
 
 (* Next:
