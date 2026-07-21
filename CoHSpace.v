@@ -25,6 +25,33 @@ Class IsCoHSpace (X : pType) := {
 Arguments wedge_inl & {X Y}.
 Arguments wedge_inr & {X Y}.
 
+(** [BCM:defn:cohspace-sum] *)
+Definition cohspace_sum {X Y : pType} `{IsCoHSpace X}
+  (f g : X ->* Y) : X ->* Y
+  := wedge_rec f g o* cohspace_op.
+
+(** The type of pointed maps from a co-H-space is an H-space under [cohspace_sum]. *)
+Instance ishspace_pmap_from_cohspace `{Funext} (X Y : pType) `{IsCoHSpace X}
+  : IsHSpace (X ->** Y).
+Proof.
+  snapply Build_IsHSpace.
+  - exact cohspace_sum.
+  - intro g.
+    apply path_pforall.
+    unfold cohspace_sum.
+    refine (pmap_prewhisker cohspace_op (wedge_rec_pconst_l g) @* _).
+    refine (pmap_compose_assoc _ _ _ @* _).
+    exact (pmap_postwhisker _ cohspace_right_identity @* pmap_precompose_idmap _).
+  - intro f.
+    apply path_pforall.
+    unfold cohspace_sum.
+    refine (pmap_prewhisker cohspace_op (wedge_rec_pconst_r f) @* _).
+    refine (pmap_compose_assoc _ _ _ @* _).
+    exact (pmap_postwhisker _ cohspace_left_identity @* pmap_precompose_idmap _).
+Defined.
+
+(** ** Suspensions as co-H-spaces *)
+
 (** [BCM:prop:iscohspace-susp] *)
 Instance iscohspace_susp (X : pType) : IsCoHSpace (psusp X).
 Proof.
@@ -72,11 +99,6 @@ Proof.
     + reflexivity.
 Defined.
 
-(** [BCM:defn:cohspace-sum] *)
-Definition cohspace_sum {X Y : pType} `{IsCoHSpace X}
-  (f g : X ->* Y) : X ->* Y
-  := wedge_rec f g o* cohspace_op.
-
 Definition sum_susp {X Y : pType}
   (f g : psusp X ->* Y) : psusp X ->* Y.
 Proof.
@@ -111,26 +133,6 @@ Proof.
       exact (concat_p_pp _ _ _ @@ 1).
   - simpl.
     symmetry; apply concat_pp_V.
-Defined.
-
-(** The type of pointed maps from a co-H-space is an H-space under [cohspace_sum]. *)
-Instance ishspace_pmap_from_cohspace `{Funext} (X Y : pType) `{IsCoHSpace X}
-  : IsHSpace (X ->** Y).
-Proof.
-  snapply Build_IsHSpace.
-  - exact cohspace_sum.
-  - intro g.
-    apply path_pforall.
-    unfold cohspace_sum.
-    refine (pmap_prewhisker cohspace_op (wedge_rec_pconst_l g) @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    exact (pmap_postwhisker _ cohspace_right_identity @* pmap_precompose_idmap _).
-  - intro f.
-    apply path_pforall.
-    unfold cohspace_sum.
-    refine (pmap_prewhisker cohspace_op (wedge_rec_pconst_r f) @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    exact (pmap_postwhisker _ cohspace_left_identity @* pmap_precompose_idmap _).
 Defined.
 
 (* Next:
