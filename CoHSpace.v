@@ -1,9 +1,11 @@
 From HoTT Require Import Basics Types Pointed
-  Homotopy.Wedge Homotopy.HSpace Homotopy.Suspension.
+  Homotopy.Wedge Homotopy.HSpace Homotopy.Suspension
+  Truncations Pointed.pTrunc WildCat.
 
 From CentralTypes Require Import Wedge.
 
 Open Scope pointed_scope.
+Open Scope mc_mult_scope.
 
 (** * Co-H-spaces *)
 
@@ -26,28 +28,64 @@ Arguments wedge_inl & {X Y}.
 Arguments wedge_inr & {X Y}.
 
 (** [BCM:defn:cohspace-sum] *)
-Definition cohspace_sum {X Y : pType} `{IsCoHSpace X}
+Definition sgop_pmap_cohspace {X Y : pType} `{IsCoHSpace X}
   (f g : X ->* Y) : X ->* Y
   := wedge_rec f g o* cohspace_op.
 
-(** The type of pointed maps from a co-H-space is an H-space under [cohspace_sum]. *)
-Instance ishspace_pmap_from_cohspace `{Funext} (X Y : pType) `{IsCoHSpace X}
+(** Postcomposition with a pointed map distributes over [sgop_pmap_cohspace]; equivalently, it is an H-space map for the [sgop_pmap_cohspace] structures. *)
+Definition sgop_pmap_cohspace_postcompose {A X Y : pType} `{IsCoHSpace A}
+  (h : X ->* Y) (f g : A ->* X)
+  : h o* sgop_pmap_cohspace f g ==* sgop_pmap_cohspace (h o* f) (h o* g).
+Proof.
+  unfold sgop_pmap_cohspace.
+  symmetry.
+  rhs_V' napply pmap_compose_assoc.
+  napply pmap_prewhisker.
+  napply wedge_rec_postcompose.
+Defined.
+
+(** [sgop_pmap_cohspace] respects pointed homotopy in each argument. *)
+Definition sgop_pmap_cohspace_phomotopy {A Y : pType} `{IsCoHSpace A}
+  {f f' g g' : A ->* Y} (p : f ==* f') (q : g ==* g')
+  : sgop_pmap_cohspace f g ==* sgop_pmap_cohspace f' g'.
+Proof.
+  unfold sgop_pmap_cohspace.
+  napply pmap_prewhisker.
+  snapply wedge_up'.
+  - exact (p @* (wedge_rec_beta_inl f' g')^*).
+  - exact (q @* (wedge_rec_beta_inr f' g')^*).
+Defined.
+
+(** The constant map is a left unit for [sgop_pmap_cohspace]. *)
+Definition leftidentity_pmap_cohspace {A Y : pType} `{IsCoHSpace A} (g : A ->* Y)
+  : sgop_pmap_cohspace pconst g ==* g.
+Proof.
+  unfold sgop_pmap_cohspace.
+  lhs' napply (pmap_prewhisker _ (wedge_rec_pconst_l g)).
+  lhs' napply pmap_compose_assoc.
+  lhs' napply (pmap_postwhisker _ cohspace_right_identity).
+  napply pmap_precompose_idmap.
+Defined.
+
+(** The constant map is a right unit for [sgop_pmap_cohspace]. *)
+Definition rightidentity_pmap_cohspace {A Y : pType} `{IsCoHSpace A} (f : A ->* Y)
+  : sgop_pmap_cohspace f pconst ==* f.
+Proof.
+  unfold sgop_pmap_cohspace.
+  lhs' napply (pmap_prewhisker _ (wedge_rec_pconst_r f)).
+  lhs' napply pmap_compose_assoc.
+  lhs' napply (pmap_postwhisker _ cohspace_left_identity).
+  napply pmap_precompose_idmap.
+Defined.
+
+(** The type of pointed maps from a co-H-space is an H-space under [sgop_pmap_cohspace]. *)
+Instance ishspace_pmap_cohspace `{Funext} (X Y : pType) `{IsCoHSpace X}
   : IsHSpace (X ->** Y).
 Proof.
   snapply Build_IsHSpace.
-  - exact cohspace_sum.
-  - intro g.
-    apply path_pforall.
-    unfold cohspace_sum.
-    refine (pmap_prewhisker cohspace_op (wedge_rec_pconst_l g) @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    exact (pmap_postwhisker _ cohspace_right_identity @* pmap_precompose_idmap _).
-  - intro f.
-    apply path_pforall.
-    unfold cohspace_sum.
-    refine (pmap_prewhisker cohspace_op (wedge_rec_pconst_r f) @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    exact (pmap_postwhisker _ cohspace_left_identity @* pmap_precompose_idmap _).
+  - exact sgop_pmap_cohspace.
+  - intro g; exact (path_pforall (leftidentity_pmap_cohspace g)).
+  - intro f; exact (path_pforall (rightidentity_pmap_cohspace f)).
 Defined.
 
 (** ** Suspensions as co-H-spaces *)
@@ -99,7 +137,7 @@ Proof.
     + reflexivity.
 Defined.
 
-Definition sum_susp {X Y : pType}
+Definition sgop_pmap_susp {X Y : pType}
   (f g : psusp X ->* Y) : psusp X ->* Y.
 Proof.
   snapply Build_pMap.
@@ -112,9 +150,9 @@ Proof.
 Defined.
 
 (** [BCM:cor:sum-susp] *)
-Definition cohspace_sum_susp {X Y : pType}
+Definition sgop_pmap_cohspace_susp {X Y : pType}
   (f g : psusp X ->* Y)
-  : cohspace_sum f g ==* sum_susp f g.
+  : sgop_pmap_cohspace f g ==* sgop_pmap_susp f g.
 Proof.
   snapply Build_pHomotopy.
   - snapply Susp_ind_FlFr.
@@ -122,7 +160,7 @@ Proof.
     + reflexivity.
     + intro x.
       apply equiv_p1_1q.
-      unfold cohspace_sum, sum_susp, "o*", iscohspace_susp, cohspace_op,
+      unfold sgop_pmap_cohspace, sgop_pmap_susp, "o*", iscohspace_susp, cohspace_op,
         Build_pMap, pointed_fun.
       rewrite ap_compose.
       rewrite 2 Susp_rec_beta_merid.
