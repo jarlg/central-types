@@ -142,6 +142,79 @@ Proof.
   symmetry; napply hs.
 Defined.
 
+(** ** Induced inverse maps on pointed mapping spaces *)
+
+(** If [A] is a co-H-space with an inverse map [r], then precomposition with [r] gives an inverse map on the [sgop_pmap_cohspace] H-space [A ->* B]: for each [f], the map [f o* r] is a right inverse of [f]. *)
+Definition iscohspaceinverse_pmap {A B : pType} `{IsCoHSpace A}
+  {r : A ->* A} (hr : IsCoHSpaceInverse r) (f : A ->* B)
+  : sgop_pmap_cohspace f (f o* r) ==* pconst.
+Proof.
+  lhs' napply (sgop_pmap_cohspace_phomotopy
+    (pmap_precompose_idmap f)^* (phomotopy_reflexive (f o* r))).
+  lhs_V' napply sgop_pmap_cohspace_postcompose.
+  lhs' napply (pmap_postwhisker f hr).
+  exact (precompose_pconst f).
+Defined.
+
+(** Dually, if [X] is an H-space with an inverse map [s], then postcomposition with [s] gives an inverse map on the pointwise H-space [A ->* X]: for each [f], the map [s o* f] is a right inverse of [f] under [sgop_pmap]. This needs no coherence on [X]. We build the pointed homotopy by hand so that its underlying homotopy is exactly [fun a => hs (f a)]; the base-point coherence is borrowed from [pmap_prewhisker f hs], whose underlying homotopy agrees, so what remains is a base-point identity that [pelim] discharges. *)
+Definition ishspaceinverse_pmap {A X : pType} `{IsHSpace X}
+  {s : X ->* X} (hs : IsHSpaceInverse s) (f : A ->* X)
+  : sgop_pmap f (s o* f) ==* pconst.
+Proof.
+  snapply Build_pHomotopy.
+  - exact (hs o f).
+  - lhs napply (dpoint_eq (pmap_prewhisker f hs)).
+    clear hs; pelim f s; cbn.
+    exact (concat_1p _ @@ 1).
+Defined.
+
+(** ** Coincidence of the pointwise and co-H-space sums *)
+
+(** The interchange law relating the two sums on [A ->* Y]. No unit laws are used, so this needs no coherence. *)
+Definition sgop_pmap_interchange {A Y : pType} `{IsCoHSpace A} `{IsHSpace Y}
+  (a b c d : A ->* Y)
+  : sgop_pmap (sgop_pmap_cohspace a b) (sgop_pmap_cohspace c d)
+    ==* sgop_pmap_cohspace (sgop_pmap a c) (sgop_pmap b d).
+Proof.
+  unfold sgop_pmap_cohspace.
+  lhs_V' napply sgop_pmap_precompose.
+  napply pmap_prewhisker.
+  symmetry.
+  snapply wedge_up'.
+  - symmetry.
+    lhs' napply sgop_pmap_precompose.
+    exact (sgop_pmap_phomotopy
+      (wedge_rec_beta_inl a b) (wedge_rec_beta_inl c d)).
+  - symmetry.
+    lhs' napply sgop_pmap_precompose.
+    exact (sgop_pmap_phomotopy
+      (wedge_rec_beta_inr a b) (wedge_rec_beta_inr c d)).
+Defined.
+
+(** On pointed maps from a co-H-space [A] into a coherent H-space [Y], the co-H-space sum [sgop_pmap_cohspace] agrees with the pointwise sum [sgop_pmap] by the Eckmann-Hilton argument (adapted to homotopies): [f + g = (f * pt) + (pt * g) = (f + pt) * (pt + g) = f * g]. *)
+Definition sgop_pmap_agree {A Y : pType} `{IsCoHSpace A}
+  `{IsCoherent Y} (f g : A ->* Y)
+  : sgop_pmap_cohspace f g ==* sgop_pmap f g.
+Proof.
+  lhs' rapply (sgop_pmap_cohspace_phomotopy
+    (rightidentity_pmap f)^* (leftidentity_pmap g)^*).
+  lhs_V' rapply sgop_pmap_interchange.
+  exact (sgop_pmap_phomotopy
+    (rightidentity_pmap_cohspace f) (leftidentity_pmap_cohspace g)).
+Defined.
+
+(** The other half of Eckmann-Hilton: the common operation is commutative: [f * g = (pt + f) * (g + pt) = (pt * g) + (f * pt) = g + f = g * f]. *)
+Definition commutative_sgop_pmap {A Y : pType} `{IsCoHSpace A}
+  `{IsCoherent Y} (f g : A ->* Y)
+  : sgop_pmap f g ==* sgop_pmap g f.
+Proof.
+  lhs_V' rapply (sgop_pmap_phomotopy
+    (leftidentity_pmap_cohspace f) (rightidentity_pmap_cohspace g)).
+  lhs' rapply sgop_pmap_interchange.
+  lhs' rapply (sgop_pmap_cohspace_phomotopy
+    (leftidentity_pmap g) (rightidentity_pmap f)).
+  rapply sgop_pmap_agree.
+Defined.
 (** ** Suspensions as co-H-spaces *)
 
 (** [BCM:prop:iscohspace-susp] *)
