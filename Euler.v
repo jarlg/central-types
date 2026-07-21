@@ -2,7 +2,7 @@ From HoTT Require Import Basics Types.Sigma Types.Universe Tactics.EvalIn Pointe
   Algebra.AbGroups.Z Truncations.Core Truncations.Connectedness
   Spaces.Spheres Homotopy.Suspension.
 
-From CentralTypes Require Import BAut1 KZ.
+From CentralTypes Require Import BAut1 KZ CoHSpace.
 
 (** * The Euler class *)
 
@@ -32,4 +32,8 @@ Definition tr_path (m : nat) {F : Type -> Type} {X Y : Type} (p : @tr m _ X = @t
 (** [BCM:defn:euler.class] *)
 Definition euler {n : nat} (X : BAut1 S^n.+1) : BAut1 (KZ n.+1)
   := (Tr n.+1 X.1; tr_path 1 X.2).
+
+(** The positive spheres are co-H-spaces. *)
+Instance iscohspace_sphere (n : nat) : IsCoHSpace S^n.+1
+  := iscohspace_susp S^n.
 

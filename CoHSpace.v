@@ -370,9 +370,3 @@ Proof.
     napply concat_pV.
   - reflexivity.
 Defined.
-
-(* Next:
-? conclude that positive spheres are cohspaces
-- If f is the antipodal map, it will require a non-trivial [point_eq f], which
-  will exactly cancel the [ap f (merid pt)^]!
-*)
