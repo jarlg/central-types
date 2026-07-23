@@ -38,7 +38,7 @@ Proof.
   destruct n.
   1: symmetry; rapply pequiv_ptr.
   refine (_ o*E (pequiv_em_connected_truncated _ n)^-1* ).
-  apply pequiv_em_group_iso.
+  tapply (emap (K' n.+1)).
   refine (pin_sn _ $oE _).
   unfold KZ.
   symmetry; apply grp_iso_pi_Tr.
