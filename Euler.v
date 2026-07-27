@@ -28,7 +28,7 @@ Definition tr_path (m : nat) {F : Type -> Type} {X Y : Type} (p : @tr m _ X = @t
   : @tr m _ (F X) = @tr m _ (F Y)
   := ap (Trunc_functor m F) p.
 
-(** The Euler class.  This definition works because [KZ n.+1] is definitionally the n-truncation of [S^n.+1]. *)
+(** The Euler class.  This definition works because [KZ n.+1] is definitionally the [n.+1]-truncation of [S^n.+1]. *)
 (** [BCM:defn:euler.class] *)
 Definition euler {n : nat} (X : BAut1 S^n.+1) : BAut1 (KZ n.+1)
   := (Tr n.+1 X.1; tr_path 1 X.2).

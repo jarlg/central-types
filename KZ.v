@@ -51,7 +51,7 @@ Proof.
   apply iscohhspace_em.
 Defined.
 
-Definition iscohspace_KZ `{Univalence} (n : nat)
+Definition iscohhspace_KZ `{Univalence} (n : nat)
   : IsCohHSpace (KZ n).
 Proof.
   napply (iscohhspace_equiv_cohhspace (equiv_KZ_EM n)).
