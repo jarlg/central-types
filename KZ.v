@@ -44,19 +44,7 @@ Proof.
   symmetry; apply grp_iso_pi_Tr.
 Defined.
 
-Global Instance ishspace_KZ `{Univalence} (n : nat)
-  : IsHSpace (KZ n).
-Proof.
-  napply (ishspace_equiv_hspace (equiv_KZ_EM n)).
-  apply iscohhspace_em.
-Defined.
-
-Definition iscohhspace_KZ `{Univalence} (n : nat)
-  : IsCohHSpace (KZ n).
-Proof.
-  napply (iscohhspace_equiv_cohhspace (equiv_KZ_EM n)).
-  apply iscohhspace_em.
-Defined.
+(** [KZ n.+1] gets its coherent H-space structure from [central_KZ] below, via [ishspace_central] and [iscoherent_central].  We deliberately do not transport one across [equiv_KZ_EM] as well: two [IsHSpace (KZ n)] instances that are not definitionally equal make [IsCoherent (KZ n)] resolve against a different structure than [IsHSpace (KZ n)] does.  The cost is that [KZ 0] gets no H-space structure, since [central_KZ] needs connectedness. *)
 
 Global Instance central_KZ `{Univalence} (n : nat)
   : Central (KZ@{u} n.+1).

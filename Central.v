@@ -58,6 +58,9 @@ Definition cohhspace_central `{Funext} {A : pType} `{Central A}
 Global Instance ishspace_central `{Funext} {A : pType} `{Central A}
   : IsHSpace A := ishspace_cohhspace A cohhspace_central.
 
+Global Instance iscoherent_central `{Funext} {A : pType} `{Central A}
+  : IsCoherent A := iscoherent_cohhspace A cohhspace_central.
+
 (** Thus [pBAut1 A] is an H-space whenever [A] is central. *)
 Global Instance ishspace_baut1_central `{Univalence} {A : pType} `{Central A}
   : IsHSpace (pBAut1 A)
@@ -90,8 +93,7 @@ Proof.
   rapply ishset_contr_comp.
   intro phi.
   rapply (contr_equiv' (comp (A ->* A) (tr pmap_idmap))).
-  { unshelve rapply (pequiv_comp_hspace (A ->** A)).
-    apply cohhspace_central. }
+  { rapply (pequiv_comp_hspace (A ->** A)). }
   rapply (contr_equiv' _ equiv_hfiber_ev1).
 Defined.
 
