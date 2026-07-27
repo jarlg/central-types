@@ -1,11 +1,11 @@
 (** * Integral Eilenberg-Mac Lane spaces K(Z, n) *)
 
-From HoTT Require Import Basics Types.Universe WildCat.Equiv Pointed
+From HoTT Require Import Basics Types.Universe WildCat.Core WildCat.Equiv Pointed
   Algebra.AbGroups Truncations.Core Truncations.Connectedness
   Spaces.Int Spaces.Spheres
   Homotopy.EMSpace Homotopy.HSpace Homotopy.HomotopyGroup Homotopy.PinSn.
 
-From CentralTypes Require Import BAut1 Central EMSpace Bands.
+From CentralTypes Require Import BAut1 Central CoHSpace EMSpace Bands.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -51,6 +51,18 @@ Global Instance central_KZ `{Univalence} (n : nat)
 Proof.
   nrefine (central_pequiv_central (equiv_KZ_EM n.+1)^-1* ).
   napply central_em.
+Defined.
+
+(** The negation map on [KZ n.+1] is the [n.+1]-truncation of the negation on [S^n.+1].  This needs no hypotheses; the H-space structure enters only in [ishspaceinverse_KZ_neg]. *)
+Definition KZ_neg (n : nat) : KZ n.+1 ->* KZ n.+1
+  := fmap (pTr n.+1) (psusp_neg S^n).
+
+(** [KZ_neg] is an inverse map for the H-space [KZ n.+1].  Indeed, [S^n.+1] is a co-H-space with inverse map [psusp_neg], and truncation carries a co-H-space inverse on [A] to an H-space inverse on [pTr n A]. *)
+Definition ishspaceinverse_KZ_neg `{Univalence} (n : nat)
+  : IsHSpaceInverse (KZ_neg n).
+Proof.
+  unfold KZ_neg.
+  apply (ptr_functor_ishspaceinverse (iscohspaceinverse_psusp_neg S^n)).
 Defined.
 
 Definition pi_KZ `{Univalence} (n : nat) : Pi n (KZ n) <~>* ZZ.

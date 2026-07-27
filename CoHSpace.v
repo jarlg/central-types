@@ -368,12 +368,12 @@ Proof.
 Defined.
 
 (** The negation map [susp_neg] of a suspension is pointed, via the meridian at the base point. *)
-Definition psusp_neg {X : pType} : psusp X ->* psusp X
+Definition psusp_neg (X : pType) : psusp X ->* psusp X
   := Build_pMap (susp_neg X) (merid pt)^.
 
 (** Suspensions have inverses: [psusp_neg] is an inverse map for the co-H-space [psusp X]. *)
-Definition iscohspaceinverse_psusp_neg {X : pType}
-  : IsCoHSpaceInverse (@psusp_neg X).
+Definition iscohspaceinverse_psusp_neg (X : pType)
+  : IsCoHSpaceInverse (psusp_neg X).
 Proof.
   unfold IsCoHSpaceInverse.
   lhs' napply sgop_pmap_cohspace_susp.
