@@ -240,8 +240,33 @@ Proof.
   exact (sgop_pmap_phomotopy (ptr_natural n f)^* (ptr_natural n g)^*).
 Defined.
 
-(** If in addition [A] has a co-H-space inverse [r] and [pTr n B] is left-invertible and has an inverse [s], then [n]-truncation carries the induced inverse on [A ->* B] (precomposition with [r]) to the induced inverse on [pTr n A ->* pTr n B] (postcomposition with [s]). Both [fmap (pTr n) (f o* r)] and [s o* fmap (pTr n) f] are right inverses of [fmap (pTr n) f] under [sgop_pmap], and these are unique because [pTr n A ->* pTr n B] is left-invertible. *)
-Definition ptr_functor_ishspaceinverse `{Funext} {n : trunc_index}
+(** If in addition [A] has a co-H-space inverse [r], then [n]-truncation carries the induced inverse of a map [f : A ->* B] (precomposition with [r]) to a right inverse of [fmap (pTr n) f] under [sgop_pmap]. *)
+Definition ptr_functor_iscohspaceinverse_pmap {n : trunc_index}
+  {A B : pType} `{IsCoHSpace A} `{IsCoherent (pTr n B)}
+  {r : A ->* A} (hr : IsCoHSpaceInverse r) (f : A ->* B)
+  : sgop_pmap (fmap (pTr n) f) (fmap (pTr n) (f o* r)) ==* pconst.
+Proof.
+  lhs_V' rapply ptr_functor_sgop_pmap.
+  lhs' tapply (fmap2 (pTr n) (iscohspaceinverse_pmap hr f)).
+  napply ptr_functor_pconst.
+Defined.
+
+(** Taking [B] to be [A] and [f] to be [pmap_idmap], the [n]-truncation of a co-H-space inverse map on [A] is an H-space inverse map on [pTr n A]. *)
+Definition ptr_functor_ishspaceinverse {n : trunc_index} {A : pType}
+  `{IsCoHSpace A} `{IsCoherent (pTr n A)}
+  {r : A ->* A} (hr : IsCoHSpaceInverse r)
+  : IsHSpaceInverse (fmap (pTr n) r).
+Proof.
+  unfold IsHSpaceInverse.
+  rhs_V' rapply (ptr_functor_iscohspaceinverse_pmap hr pmap_idmap).
+  symmetry; apply sgop_pmap_phomotopy.
+  - tapply (fmap_id (pTr n)).
+  - tapply (fmap2 (pTr n)).
+    apply pmap_postcompose_idmap.
+Defined.
+
+(** Going back to independent [A] and [B], as in [ptr_functor_iscohspaceinverse_pmap], if moreover [pTr n B] is left-invertible and has an inverse [s], then the right inverse above is the induced inverse on [pTr n A ->* pTr n B] (postcomposition with [s]).  Both are right inverses of [fmap (pTr n) f] under [sgop_pmap], and these are unique because [pTr n A ->* pTr n B] is left-invertible. *)
+Definition ptr_functor_ishspaceinverse_unique `{Funext} {n : trunc_index}
   {A B : pType} `{IsCoHSpace A} `{IsCoherent (pTr n B)}
   `{forall y : pTr n B, IsEquiv (y *.)}
   {r : A ->* A} (hr : IsCoHSpaceInverse r)
@@ -250,14 +275,10 @@ Definition ptr_functor_ishspaceinverse `{Funext} {n : trunc_index}
   : fmap (pTr n) (f o* r) ==* s o* fmap (pTr n) f.
 Proof.
   apply phomotopy_path.
-  pose (fmap_f := fmap (pTr n) f);
-    rapply (equiv_inj (sg_op fmap_f));
-    unfold fmap_f; clear fmap_f.
+  tapply (equiv_inj (sgop_pmap (fmap (pTr n) f))).
   1: rapply isleftinvertible_hspace_pmap.
   apply path_pforall.
-  lhs_V' rapply ptr_functor_sgop_pmap.
-  lhs' tapply (fmap2 (pTr n) (iscohspaceinverse_pmap hr f)).
-  lhs' napply ptr_functor_pconst.
+  lhs' rapply (ptr_functor_iscohspaceinverse_pmap hr f).
   symmetry; apply (ishspaceinverse_pmap hs).
 Defined.
 
