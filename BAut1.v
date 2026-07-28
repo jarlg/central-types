@@ -365,3 +365,45 @@ Definition pequiv_spbaut1_pbaut1@{u v w | u < v, v < w} `{Univalence} (A : pType
   : spBAut1@{u v w} A <~>* pBAut1@{u v} A
   := (issmall_pbaut1 A).2.
 
+(** ** Twisting bands by an automorphism *)
+
+(** An automorphism [e] of [A] twists a band by post-composing its orientation with the path [ap tr (path_universe e)]. *)
+Definition twist_baut1@{u v} `{Univalence} {A : Type@{u}} (e : A <~> A)
+  : BAut1@{u v} A -> BAut1@{u v} A
+  := fun X => (X.1; X.2 @ ap tr (path_universe_uncurried@{u u v} e)).
+
+(** When [e] is an involution, so is the path we use to adjust the orientation. *)
+Definition ap_tr_path_universe_invol `{Univalence} {A : Type}
+  (e : A <~> A) (einv : e o e == idmap) {n : trunc_index}
+  : idpath = ap (tr (n:=n)) (path_universe_uncurried e)
+               @ ap tr (path_universe_uncurried e).
+Proof.
+  apply ap_path_universe_invol.
+  symmetry; exact einv.
+Defined.
+
+(** When [e] is an involution, the point twists to itself. *)
+Definition twist_baut1_pt `{Univalence} {A : Type}
+  (e : A <~> A) (einv : e o e == idmap)
+  : pt = twist_baut1 e pt.
+Proof.
+  snapply path_hfiber.
+  (* If we choose [e^-1%equiv] here, we don't need [einv] in the rest of the proof.  But then the current proof of [iscoherent_hspace_twisted_baut1] doesn't go through. *)
+  1: exact (path_universe_uncurried e).
+  simpl.
+  rhs napply (ap _ (concat_1p _)).
+  exact (ap_tr_path_universe_invol e einv).
+Defined.
+
+(** When [e] is an involution, so is [twist_baut1 e]. *)
+Definition twist_baut1_involutive `{Univalence} {A : Type}
+  (e : A <~> A) (einv : e o e == idmap)
+  : forall X, twist_baut1 e (twist_baut1 e X) = X.
+Proof.
+  intros [X p].
+  snapply path_hfiber; unfold ".1", ".2".
+  1: exact idpath.
+  revert X p; rapply band_induction_curried; cbn.
+  lhs napply (concat_1p _ @@ 1).
+  symmetry; exact (ap_tr_path_universe_invol e einv).
+Defined.

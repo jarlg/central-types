@@ -268,41 +268,18 @@ Section Central.
 
   (** *** The twisting operation *)
 
-  (** Negation induces a 'twisting' operation on bands. *)
-  Definition twist_baut1 : BAut1@{u v} A -> BAut1@{u v} A
-    := fun X => (X.1; X.2 @ ap tr (path_universe_uncurried@{u u v} neg)).
+  (** Negation induces a 'twisting' operation on bands.  It is the general [twist_baut1] at the automorphism [neg], so the two facts below are the general ones at [neg_involutive]. *)
+  Definition twist_baut1_neg : BAut1@{u v} A -> BAut1@{u v} A
+    := twist_baut1@{u v} neg.
 
-  Local Notation "X ^T" := (twist_baut1 X) (at level 1).
-
-  (** This goal comes up twice below, so we make a lemma for it. *)
-  Lemma ap_tr_path_universe_neg_neg {n : trunc_index}
-    : idpath = ap@{v v} (tr (n:=n)) (path_universe_uncurried neg)
-                 @ ap tr (path_universe_uncurried neg).
-  Proof.
-    apply ap_path_universe_invol.
-    symmetry; exact neg_involutive.
-  Defined.
+  Local Notation "X ^T" := (twist_baut1_neg X) (at level 1).
 
   (** The point twists to itself (but a general band does not). *)
-  Definition twist_baut1_1 : pt = pt^T.
-  Proof.
-    snapply path_hfiber.
-    1: exact (path_universe_uncurried neg).
-    nrefine (_ @ ap _ (concat_1p _)^).
-    exact ap_tr_path_universe_neg_neg.
-  Defined.
+  Definition twist_baut1_1 : pt = pt^T
+    := twist_baut1_pt neg neg_involutive.
 
-  Definition twist_involutive : forall X, (X^T)^T = X.
-  Proof.
-    intros [X p].
-    snapply path_hfiber.
-    1: exact idpath.
-    revert X p; rapply band_induction_curried.
-    refine (_ @ (concat_1p _)^).
-    unfold twist_baut1, pr2.
-    refine (whiskerR (concat_1p _) _ @ _).
-    exact ap_tr_path_universe_neg_neg^.
-  Defined.
+  Definition twist_involutive : forall X, (X^T)^T = X
+    := twist_baut1_involutive neg neg_involutive.
 
   (** Tensoring with the point on the right twists the left factor. *)
   Theorem tensor_twist_r
