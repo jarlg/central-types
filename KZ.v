@@ -3,7 +3,7 @@
 From HoTT Require Import Basics Types.Universe WildCat.Core WildCat.Equiv Pointed
   Algebra.AbGroups Truncations.Core Truncations.Connectedness
   Spaces.Int Spaces.Spheres
-  Homotopy.EMSpace Homotopy.HSpace Homotopy.HomotopyGroup Homotopy.PinSn.
+  Homotopy.EMSpace Homotopy.HSpace Homotopy.HomotopyGroup Homotopy.PiSpheres.
 
 From CentralTypes Require Import BAut1 Central CoHSpace EMSpace Bands.
 
