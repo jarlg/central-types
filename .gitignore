@@ -1,3 +1,4 @@
+#*#
 .#*
 *~
 
@@ -14,3 +15,9 @@ CoqMakefile
 CoqMakefile.conf
 _CoqProject
 
+/CLAUDE.md
+/AdmittedDependencies.md
+/CheckAssumptions*.v
+/CoHSpace.md
+/CoherenceWIP.md
+rocq_mcp_cache*
