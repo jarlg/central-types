@@ -118,35 +118,65 @@ Proof.
   exact (equiv_inj (x *.) (hr x @ (hs x)^)).
 Defined.
 
-(*
-(** The inversion operation on a central type. *)
-(** TODO: rename to be less generic. *)
-Definition inv `{Univalence} {A : pType} `{Central A} : A ->* A.
+(** Every left-invertible H-space has an inversion map (which is unique by [homotopic_ishspaceinverse]).  In [BCFR], this is denoted [id^*]. *)
+Definition hspace_right_inverse {X : pType} `{IsHSpace X}
+  `{forall x : X, IsEquiv (x *.)}
+  : X ->* X.
 Proof.
-  refine (Build_pMap (fun a => (a *.)^-1 pt) _).
+  refine (Build_pMap (fun x => (x *.)^-1 pt) _).
   apply moveR_equiv_V.
-  exact (hspace_left_identity _)^.
+  symmetry; apply hspace_left_identity.
 Defined.
 
-(** TODO: rename to be less generic. *)
-Definition equiv_inv `{Univalence} {A : pType} `{Central A}
-  : A <~>* A.
+Definition ishspaceinverse_hspace_right_inverse {X : pType} `{IsHSpace X}
+  `{forall x : X, IsEquiv (x *.)}
+  : IsHSpaceInverse (hspace_right_inverse (X:=X)).
 Proof.
-  apply (Build_pEquiv inv).
-  (* Since [A] is connected, it suffices to show that [hfiber inv pt] is contractible. *)
-  apply isequiv_contr_map; hnf.
-  rapply (conn_point_elim (-1)).
-  (* This fibre is equivalent to the following, which is clearly contractible. *)
-  rapply (contr_equiv' {a : A & pt = a}).
-  apply equiv_functor_sigma_id; intro a.
-  unfold inv, Build_pMap, pointed_fun.
-  refine (Build_Equiv _ _ (moveR_equiv_V _ _) _ oE _).
-  apply equiv_concat_r.
-  exact (hspace_right_identity _)^.
+  (* The second bullet can be removed if we use [hspace_phomotopy_from_homotopy], but that currently requires [Funext], so we'll avoid it. *)
+  snapply Build_pHomotopy.
+  - intros x; cbn.
+    apply eisretr.
+  - cbn.
+    rhs napply concat_p1.
+    unfold moveR_equiv_V.
+    rhs napply (ap_pp _ _ _ @@ concat_1p _).
+    rhs_V napply concat_p_pp.
+    rhs_V napply (ap_compose _ _ _ @@ 1).
+    rhs napply (ap_V (fun x => pt * (sg_op pt)^-1 x) _ @@ 1).
+    apply moveL_Vp.
+    lhs napply (concat_A1p (eisretr (sg_op pt))).
+    nrefine (_ @@ 1).
+    apply eisadj.
 Defined.
 
-(** In order to show that [inv] is an involution (or equivalently, equal to it's own inverse), we need associativity. This is needed for various later things. For this reason I reverted to the old approach in Bands.v. *)
-*)
+(** When [X] is both left- and right-invertible, [hspace_right_inverse] is an equivalence. This applies when [X] is connected, or when [X] is left-invertible and commutative. *)
+Instance isequiv_hspace_right_inverse {X : pType} `{IsHSpace X}
+  `{forall x : X, IsEquiv (x *.)} `{forall x : X, IsEquiv (.* x)}
+  : IsEquiv (hspace_right_inverse (X:=X)).
+Proof.
+  cbn.
+  snapply isequiv_adjointify.
+  - exact (fun x => (.* x)^-1 pt).
+  - intro z.
+    apply equiv_moveR_equiv_V.
+    symmetry; apply (eisretr (.* z)).
+  - intro z.
+    apply equiv_moveR_equiv_V.
+    symmetry; apply (eisretr (z *.)).
+Defined.
+
+(** When [X] is left-invertible and commutative, [hspace_right_inverse] is an involution. *)
+Definition hspace_right_inverse_involutive  {X : pType} `{IsHSpace X}
+  `{forall x : X, IsEquiv (x *.)} `{comm : Commutative X X hspace_op}
+  : hspace_right_inverse (X:=X) o hspace_right_inverse == idmap.
+Proof.
+  cbn.
+  intro z.
+  apply equiv_moveR_equiv_V.
+  symmetry.
+  lhs rapply comm.
+  apply eisretr.
+Defined.
 
 (** An H-space map sends inverse pairs to inverse pairs: if [x * y = pt] then [f x * f y = pt]. This uses only that [f] preserves the operation and the base point. *)
 Definition hspace_map_preserves_inverse {X Y : pType} `{IsHSpace X} `{IsHSpace Y}
