@@ -5,7 +5,7 @@ From HoTT Require Import Basics Types
   WhiteheadsPrinciple Homotopy.IdentitySystems
   Modalities.ReflectiveSubuniverse Modalities.Separated.
 
-From CentralTypes Require Import Lemmas Cover SelfMaps Bands BAut1 Smallness misc.
+From CentralTypes Require Import Lemmas Cover SelfMaps Bands BAut1 Smallness misc CoHSpace.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
@@ -69,6 +69,16 @@ Global Instance ishspace_baut1_central `{Univalence} {A : pType} `{Central A}
 Global Instance iscoherent_baut1_central `{Univalence} {A : pType} `{Central A}
   : IsCoherent (pBAut1 A)
   := iscoherent_hspace_twisted_baut1.
+
+(** The negation map defined in [Bands.v] is an inversion map on [A]. *)
+Definition ishspaceinverse_neg `{Univalence} {A : pType} `{Central A}
+  : IsHSpaceInverse (neg (A:=A)).
+Proof.
+  apply hspace_phomotopy_from_homotopy.
+  intros a.
+  cbn.
+  apply eisretr.
+Defined.
 
 (** Coq knows that the H-space structure is left and right invertible. *)
 

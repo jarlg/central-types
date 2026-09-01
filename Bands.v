@@ -2,7 +2,7 @@ From HoTT Require Import Basics Types HFiber
   Truncations.Core Truncations.SeparatedTrunc ReflectiveSubuniverse
   Pointed.Core Pointed.pEquiv Homotopy.HSpace Homotopy.Cover WildCat.
 
-From CentralTypes Require Import Lemmas SelfMaps Cover BAut1.
+From CentralTypes Require Import Lemmas SelfMaps Cover BAut1 CoHSpace.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -167,7 +167,7 @@ Section Central.
 
   (** *** The negation operation *)
 
-  (** [baut1_symm1] is a self-equivalence of [A] tensored with itself, and thus we get a self-equivalence [neg] of [A] (short for negation). We define it in two steps to get rid of one universe variable. *)
+  (** [baut1_symm1] is a self-equivalence of [A] tensored with itself, and thus we get a self-equivalence [neg] of [A] (short for negation). We define it in two steps to get rid of one universe variable.  This plays the role of the map denoted [id^*] in BCFR, but the definition is different. We show in [Central.ishspaceinverse_neg] that this does in fact give right inverses, so it agrees with [id^*]. *)
   Local Definition neg' : A <~>* A
     := pequiv_ev1' o*E baut1_symm1 o*E pequiv_ev1'^-1*.
   Definition neg@{w} := Eval unfold neg' in neg'@{v w}.
@@ -364,6 +364,18 @@ Section Central.
     unfold equiv_path, equiv_fun.
     refine (ap _ (ap_pr1_path_sigma _ _) @ _); unfold ".1".
     apply transport_idmap_path_universe_uncurried.
+  Defined.
+
+  (** *** [twist_baut1_neg] is an inverse map *)
+
+  (** This is roughly Corollary 4.14 of [BCFR]. *)
+  Definition ishspaceinverse_twist_baut1_neg
+    : IsHSpaceInverse twist_baut1_neg.
+  Proof.
+    apply hspace_phomotopy_from_homotopy.
+    intro X; change (X * X^T = pt).
+    symmetry; apply pointed_band_trivial; cbn.
+    apply ispointed_pretensor_baut1.
   Defined.
 
 End Central.
