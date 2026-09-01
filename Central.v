@@ -169,34 +169,6 @@ Proof.
       by rewrite (point_eq f).
 Defined.
 
-(** The inversion operation on a central type. *)
-(** TODO: rename to be less generic. *)
-Definition inv `{Univalence} {A : pType} `{Central A} : A ->* A.
-Proof.
-  refine (Build_pMap (fun a => (a *.)^-1 pt) _).
-  apply moveR_equiv_V.
-  exact (hspace_left_identity _)^.
-Defined.
-
-(** TODO: rename to be less generic. *)
-Definition equiv_inv `{Univalence} {A : pType} `{Central A}
-  : A <~>* A.
-Proof.
-  apply (Build_pEquiv inv).
-  (* Since [A] is connected, it suffices to show that [hfiber inv pt] is contractible. *)
-  apply isequiv_contr_map; hnf.
-  rapply (conn_point_elim (-1)).
-  (* This fibre is equivalent to the following, which is clearly contractible. *)
-  rapply (contr_equiv' {a : A & pt = a}).
-  apply equiv_functor_sigma_id; intro a.
-  unfold inv, Build_pMap, pointed_fun.
-  refine (Build_Equiv _ _ (moveR_equiv_V _ _) _ oE _).
-  apply equiv_concat_r.
-  exact (hspace_right_identity _)^.
-Defined.
-
-(** In order to show that [inv] is an involution (or equivalently, equal to it's own inverse), we need associativity. This is needed for various later things. For this reason I reverted to the old approach in Bands.v. *)
-
 (** ** [BAut1 A] is a delooping of a central type *)
 
 (** When [A] is central, [BAut1] is a delooping of [A]. (A pointed version of Prop. 4.4.) *)
