@@ -88,6 +88,7 @@ Proof.
   apply path_universe_1.
 Defined.
 
+(** In the [BCFR] paper, [X = Y] is the *definition* of the tensor operation on bands, and this shows that [pretensor_baut1'] and [pretensor_baut1] are equivalent to it. *)
 Definition equiv_pretensor_path_baut1' `{Univalence} {A : Type} (X Y : BAut1 A)
   : pretensor_baut1' X Y <~> (X = Y).
 Proof.

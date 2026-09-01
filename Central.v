@@ -177,7 +177,7 @@ Definition pequiv_loops_baut1@{u v w | u < v, v < w} `{Univalence}
   : loops (pBAut1 A) <~>* A
   := pequiv_ev1'@{u v} o*E (pequiv_pretensor_path_baut1@{u v w w v} pt)^-1*.
 
-(* The unpointed map underlying [pequiv_loops_baut1] is definitionally equal to the map underlying the equivalence [equiv_ev_band' pt] defined in Bands.v.  It follows that the two unpointed equivalences are propositionally equal. *)
+(** The unpointed map underlying [pequiv_loops_baut1] is definitionally equal to the map underlying the equivalence [equiv_ev_band' pt] defined in Bands.v.  It follows that the two unpointed equivalences are propositionally equal. *)
 Definition pequiv_loops_baut1_equiv_ev_band' `{Univalence}
   {A : pType@{u}} `{Central@{u} A}
   : pointed_equiv_equiv (pequiv_loops_baut1 (A:=A)) = equiv_ev_band' (A:=A) pt.

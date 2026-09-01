@@ -198,8 +198,8 @@ Section Central.
   Defined.
   Definition neg_precompose@{w} := Eval unfold neg_precompose' in neg_precompose'@{w v u u}.
 
-  (** Thus we get an equivalence [pcomp (A<~>A) negation <~> A]. *)
-  Definition equiv_ev_neg : pcomp (A<~>A) neg <~>* A
+  (** Thus we get a pointed equivalence between the component of [A <~> A] containing [neg] and [A]. *)
+  Definition equiv_ev_neg : pcomp (A <~> A) neg <~>* A
     := pequiv_ev1' o*E neg_precompose^-1*.
 
   (** [equiv_ev_neg] is homotopic to evaluation at the point. *)
