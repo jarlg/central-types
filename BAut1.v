@@ -414,3 +414,13 @@ Proof.
   lhs napply (concat_1p _ @@ 1).
   symmetry; exact (ap_tr_path_universe_invol e einv).
 Defined.
+
+(** Homotopic equivalences lead to homotopic twist maps. *)
+Definition twist_baut1_homotopic `{Univalence} {A : Type@{u}}
+  (e : A <~> A) (e' : A <~> A) (p : e == e')
+  : twist_baut1 e == twist_baut1 e'.
+Proof.
+  intro X; unfold twist_baut1.
+  apply (ap (fun p => (X.1; X.2 @ ap tr p))).
+  by apply path2_universe.
+Defined.

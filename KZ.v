@@ -3,7 +3,8 @@
 From HoTT Require Import Basics Types.Universe WildCat.Core WildCat.Equiv Pointed
   Algebra.AbGroups Truncations.Core Truncations.Connectedness
   Spaces.Int Spaces.Spheres
-  Homotopy.EMSpace Homotopy.HSpace Homotopy.HomotopyGroup Homotopy.PiSpheres.
+  Homotopy.EMSpace Homotopy.HSpace Homotopy.HomotopyGroup Homotopy.PiSpheres
+  Homotopy.Suspension.
 
 From CentralTypes Require Import Central CoHSpace EMSpace Bands.
 
@@ -71,6 +72,14 @@ Proof.
   srapply homotopic_ishspaceinverse.
   - apply ishspaceinverse_neg.
   - apply ishspaceinverse_KZ_neg.
+Defined.
+
+Definition KZ_neg_involutive `{Univalence} (n : nat)
+  : KZ_neg n o KZ_neg n == idmap.
+Proof.
+  lhs_V' rapply Trunc_functor_compose.
+  rhs_V' rapply Trunc_functor_idmap.
+  apply O_functor_homotopy, susp_neg_inv.
 Defined.
 
 Definition pi_KZ `{Univalence} (n : nat) : Pi n (KZ n) <~>* ZZ.
