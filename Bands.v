@@ -268,15 +268,11 @@ Section Central.
 
   (** *** The twisting operation *)
 
-  (** Negation induces a 'twisting' operation on bands.  It is the general [twist_baut1] at the automorphism [neg], so the two facts below are the general ones at [neg_involutive]. *)
-  Definition twist_baut1_neg : BAut1@{u v} A -> BAut1@{u v} A
-    := twist_baut1@{u v} neg.
+  (** Negation induces a 'twisting' operation on bands, which sends the point to itself. *)
+  Definition twist_baut1_neg : pBAut1@{u v} A ->* pBAut1@{u v} A
+    := pmap_twist_baut1@{u v} neg neg_involutive.
 
   Local Notation "X ^T" := (twist_baut1_neg X) (at level 1).
-
-  (** The point twists to itself (but a general band does not). *)
-  Definition twist_baut1_1 : pt = pt^T
-    := twist_baut1_pt neg neg_involutive.
 
   Definition twist_involutive : forall X, (X^T)^T = X
     := twist_baut1_involutive neg neg_involutive.
@@ -308,7 +304,7 @@ Section Central.
     snapply Build_IsHSpace.
     - exact twisted_tensor_baut1.
     - intro X.
-      refine (ap (fun x => tensor_baut1 x X) twist_baut1_1^ @ _).
+      refine (ap (fun x => tensor_baut1 x X) (point_eq twist_baut1_neg) @ _).
       apply tensor_unit_l.
     - intro X.
       refine (tensor_twist_r _ @ _).

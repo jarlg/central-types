@@ -395,6 +395,12 @@ Proof.
   exact (ap_tr_path_universe_invol e einv).
 Defined.
 
+(** Therefore, [twist_baut1] is a pointed map. *)
+Definition pmap_twist_baut1 `{Univalence} {A : Type@{u}}
+  (e : A <~> A) (einv : e o e == idmap)
+  : pBAut1@{u v} A ->* pBAut1@{u v} A
+  := Build_pMap (twist_baut1 e) (twist_baut1_pt e einv)^.
+
 (** When [e] is an involution, so is [twist_baut1 e]. *)
 Definition twist_baut1_involutive `{Univalence} {A : Type}
   (e : A <~> A) (einv : e o e == idmap)
