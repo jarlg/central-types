@@ -16,22 +16,25 @@ The notable results in this repository are:
 Notable results from the BCM paper are:
 
 - Results on co-H-spaces, in [`CoHSpace.v`](./CoHSpace.v).
-- Definition of the Euler class, in [`Euler.v`](./Euler.v).
+- Definition of the Euler class and the fact that it sends negation to negation, in [`Euler.v`](./Euler.v)
 - Definition of the Thom class and its relationship to the Euler class,
   in [`ThomEuler.v`](./ThomEuler.v).
 - All of the material on reflections, in [`Reflections.v`](./Reflections.v).
 - The general tangent bundle construction, in [`TorsorTangent.v`](./TorsorTangent.v),
   e.g. `tau` and `theta` in that file.
 - The tangent bundles of spheres, in [`Spheres.v`](./Spheres.v),
-  including the existence of sections of for odd spheres.
+  including the existence of sections for odd spheres.
 - The new material required to prove the Hairy Ball Theorem,
   in [`TorsorTangent.v`](./TorsorTangent.v).  Some (known) necessary background
-  on the homotopy groups of spheres is not yet available in this library.
+  on degrees of maps between spheres is not yet available in this library.
 - The tangent bundles of real and complex projective spaces, in [`ProjectiveSpaces.v`](./ProjectiveSpaces.v).
 
 A lot of necessary background material was also formalized.
 
-The version 3dffd1af from Apr 29, 2026 has been tested with Rocq 9.2.0, Rocq 9.1.0 and Rocq 9.0.0 against commit 8a3c787a of Coq-HoTT from Apr 29, 2026.
+Version 3d35467b from Sep 1, 2026 has been tested with Rocq 9.1.0 against commit a2a6ced16 of Coq-HoTT from Aug 22, 2026.
+It likely works with Rocq 9.0.0 and Rocq 9.2.0.
+
+Version 3dffd1af from Apr 29, 2026 has been tested with Rocq 9.2.0, Rocq 9.1.0 and Rocq 9.0.0 against commit 8a3c787a of Coq-HoTT from Apr 29, 2026.
 
 The version from Mar 18, 2026 has been tested with Rocq 9.1.0 against commit 6526cb5a of Coq-HoTT from Feb 18, 2026.
 It very likely works with Rocq 9.0.0 as well.
