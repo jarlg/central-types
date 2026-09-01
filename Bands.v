@@ -268,7 +268,7 @@ Section Central.
 
   (** *** The twisting operation *)
 
-  (** Negation induces a 'twisting' operation on bands, which sends the point to itself. *)
+  (** Negation induces a 'twisting' operation on bands, which sends the point to itself. This is Definition 4.15 and Lemma 4.16 in [BCFR]. *)
   Definition twist_baut1_neg : pBAut1@{u v} A ->* pBAut1@{u v} A
     := pmap_twist_baut1@{u v} neg neg_involutive.
 
@@ -295,10 +295,11 @@ Section Central.
   Defined.
 
   (** TODO: maybe we should remove "twisted" everywhere?  The tensor *is* the twisted version of the operation defined earlier, so it could be called something different. *)
+  (** This is Definition 4.17 from [BCFR]. *)
   Definition twisted_tensor_baut1
     := fun X Y => tensor_baut1 X^T Y.
 
-  (** It follows that we get an H-space structure by first twisting the left factor. *)
+  (** It follows that we get an H-space structure by first twisting the left factor. This is part of Theorem 4.19, with a different proof.  TODO: Also show that the operation is commutative. *)
   Local Instance hspace_twisted_baut1 : IsHSpace (pBAut1 A).
   Proof.
     snapply Build_IsHSpace.
@@ -368,7 +369,7 @@ Section Central.
 
   (** *** [twist_baut1_neg] is an inverse map *)
 
-  (** This is roughly Corollary 4.14 of [BCFR]. *)
+  (** This is roughly Corollary 4.14 of [BCFR]. That twisting gives a *left* inverse has a similar argument, and is noted just before Proposition 4.18 of [BCFR]. *)
   Definition ishspaceinverse_twist_baut1_neg
     : IsHSpaceInverse twist_baut1_neg.
   Proof.
