@@ -5,7 +5,7 @@ From HoTT Require Import Basics Types.Universe WildCat.Core WildCat.Equiv Pointe
   Spaces.Int Spaces.Spheres
   Homotopy.EMSpace Homotopy.HSpace Homotopy.HomotopyGroup Homotopy.PiSpheres.
 
-From CentralTypes Require Import Central CoHSpace EMSpace.
+From CentralTypes Require Import Central CoHSpace EMSpace Bands.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -63,6 +63,14 @@ Definition ishspaceinverse_KZ_neg `{Univalence} (n : nat)
 Proof.
   unfold KZ_neg.
   apply (ptr_functor_ishspaceinverse (iscohspaceinverse_psusp_neg S^n)).
+Defined.
+
+Definition neg_homotopic_KZ_neg `{Univalence} (n : nat)
+  : neg (A:=KZ n.+1) == KZ_neg n.
+Proof.
+  srapply homotopic_ishspaceinverse.
+  - apply ishspaceinverse_neg.
+  - apply ishspaceinverse_KZ_neg.
 Defined.
 
 Definition pi_KZ `{Univalence} (n : nat) : Pi n (KZ n) <~>* ZZ.
