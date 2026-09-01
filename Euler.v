@@ -28,6 +28,20 @@ Definition tr_path (m : nat) {F : Type -> Type} {X Y : Type} (p : @tr m _ X = @t
   : @tr m _ (F X) = @tr m _ (F Y)
   := ap (Trunc_functor m F) p.
 
+(** When [F] is a reflective subuniverse, [tr_path] sends the path associated to an equivalence to the path associated to the induced equivalence. *)
+Definition tr_path_path_universe `{Univalence} (m : nat) (O : ReflectiveSubuniverse)
+  {X Y : Type} (f : X <~> Y)
+  : tr_path m (F:=O) (ap tr (path_universe_uncurried f))
+    = ap tr (path_universe_uncurried (equiv_O_functor O f)).
+Proof.
+  unfold tr_path.
+  lhs_V napply (ap_compose tr (Trunc_functor m O)).
+  cbn.
+  lhs napply (ap_compose O tr).
+  napply (ap (ap tr)).
+  napply ap_O_path_universe'.
+Defined.
+
 (** The Euler class.  This definition works because [KZ n.+1] is definitionally the [n.+1]-truncation of [S^n.+1]. *)
 (** [BCM:defn:euler.class] *)
 Definition euler {n : nat} (X : BAut1 S^n.+1) : BAut1 (KZ n.+1)
@@ -64,3 +78,17 @@ Proof.
     symmetry; apply twist_baut1_neg_homotopic_twist_baut1_KZ_neg.
 Defined.
 
+(** The Euler class takes negation to negation.  The two bands have the same underlying type, so all that is left is to compare the orientations, where [tr_path_path_universe] identifies the truncation of the sphere negation with the negation on [KZ n.+1].  This, along with our work on [twist_baut1_KZ_neg] above, is [BCM:prop:euler.negation]. *)
+Definition euler_twist_baut1 `{Univalence} {n : nat} (X : BAut1 S^n.+1)
+  : euler (twist_baut1_susp_neg n X) = twist_baut1_KZ_neg n (euler X).
+Proof.
+  snapply path_hfiber; simpl.
+  1: reflexivity.
+  rhs napply (concat_1p _).
+  lhs napply ap_pp.
+  napply (1 @@ _).
+  lhs napply (tr_path_path_universe 1 (Tr n.+1%nat) (pequiv_susp_neg S^n)).
+  napply (ap (ap tr o path_universe_uncurried)).
+  (* [equiv_O_functor] and [KZ_neg] have the same underlying function, but different proofs that it is an equivalence. *)
+  apply path_equiv; reflexivity.
+Defined.
