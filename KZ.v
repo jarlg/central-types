@@ -5,7 +5,7 @@ From HoTT Require Import Basics Types.Universe WildCat.Core WildCat.Equiv Pointe
   Spaces.Int Spaces.Spheres
   Homotopy.EMSpace Homotopy.HSpace Homotopy.HomotopyGroup Homotopy.PiSpheres.
 
-From CentralTypes Require Import BAut1 Central CoHSpace EMSpace Bands.
+From CentralTypes Require Import Central CoHSpace EMSpace.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -53,9 +53,9 @@ Proof.
   napply central_em.
 Defined.
 
-(** The negation map on [KZ n.+1] is the [n.+1]-truncation of the negation on [S^n.+1].  This needs no hypotheses; the H-space structure enters only in [ishspaceinverse_KZ_neg]. *)
-Definition KZ_neg (n : nat) : KZ n.+1 ->* KZ n.+1
-  := fmap (pTr n.+1) (psusp_neg S^n).
+(** The negation map on [KZ n.+1] is the [n.+1]-truncation of the negation on [S^n.+1].  We record it as a pointed equivalence, so that coercions supply either a pointed map (as in [ishspaceinverse_KZ_neg]) or an equivalence (as in [twist_baut1_KZ_neg]). *)
+Definition KZ_neg (n : nat) : KZ n.+1 <~>* KZ n.+1
+  := emap (pTr n.+1) (pequiv_susp_neg S^n).
 
 (** [KZ_neg] is an inverse map for the H-space [KZ n.+1].  Indeed, [S^n.+1] is a co-H-space with inverse map [psusp_neg], and truncation carries a co-H-space inverse on [A] to an H-space inverse on [pTr n A]. *)
 Definition ishspaceinverse_KZ_neg `{Univalence} (n : nat)

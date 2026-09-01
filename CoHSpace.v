@@ -371,6 +371,10 @@ Defined.
 Definition psusp_neg (X : pType) : psusp X ->* psusp X
   := Build_pMap (susp_neg X) (merid pt)^.
 
+(** [psusp_neg] is a pointed equivalence, since [susp_neg] is an equivalence. *)
+Definition pequiv_susp_neg (X : pType) : psusp X <~>* psusp X
+  := Build_pEquiv (psusp_neg X) (isequiv_susp_neg X).
+
 (** Suspensions have inverses: [psusp_neg] is an inverse map for the co-H-space [psusp X]. *)
 Definition iscohspaceinverse_psusp_neg (X : pType)
   : IsCoHSpaceInverse (psusp_neg X).
