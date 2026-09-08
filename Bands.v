@@ -167,7 +167,7 @@ Section Central.
 
   (** *** The negation operation *)
 
-  (** [baut1_symm1] is a self-equivalence of [A] tensored with itself, and thus we get a self-equivalence [neg] of [A] (short for negation). We define it in two steps to get rid of one universe variable.  This plays the role of the map denoted [id^*] in BCFR, but the definition is different. We show in [Central.ishspaceinverse_neg] that this does in fact give right inverses, so it agrees with [id^*]. *)
+  (** [baut1_symm1] is a self-equivalence of [A] tensored with itself, and thus we get a self-equivalence [neg] of [A] (short for negation). We define it in two steps to get rid of one universe variable.  This plays the role of the map denoted [id^*] and called "inversion" in BCFR, but the definition is different. We show in [Central.ishspaceinverse_neg] that this does in fact give right inverses, so it agrees with [id^*]. *)
   Local Definition neg' : A <~>* A
     := pequiv_ev1' o*E baut1_symm1 o*E pequiv_ev1'^-1*.
   Definition neg@{w} := Eval unfold neg' in neg'@{v w}.
@@ -268,7 +268,7 @@ Section Central.
 
   (** *** The twisting operation *)
 
-  (** Negation induces a 'twisting' operation on bands, which sends the point to itself. This is Definition 4.15 and Lemma 4.16 in [BCFR]. *)
+  (** Negation induces a 'twisting' operation on bands, which sends the point to itself. This is Definition 4.15 and Lemma 4.16 in [BCFR], where it is called the "dual". The proof of pointedness in the formalization is different from the proof in Lemma 4.16. *)
   Definition twist_baut1_neg : pBAut1@{u v} A ->* pBAut1@{u v} A
     := pmap_twist_baut1@{u v} neg neg_involutive.
 
