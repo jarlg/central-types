@@ -221,7 +221,7 @@ Global Instance isconnected_pctype (BC : pcType)
   : IsConnected 0 BC.1
   := BC.2.
 
-Definition equiv_path_pctype `{Univalence} (A B : pcType) : A <~>* B <~> A = B.
+Definition equiv_path_pctype `{Univalence} (A B : pcType) : (A <~>* B) <~> (A = B).
 Proof.
   nrefine (_ oE equiv_path_ptype _ _).
   apply equiv_path_sigma_hprop.
