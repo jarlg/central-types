@@ -31,6 +31,8 @@ Notable results from the BCM paper are:
 
 A lot of necessary background material was also formalized.
 
+Version b9d060caf from Nov 6, 2026 has been tested with Rocq 9.2.0 against commit 4d1c12c4 of Coq-HoTT from Nov 7, 2026.
+
 Version 3d35467b from Sep 1, 2026 has been tested with Rocq 9.1.0 against commit a2a6ced16 of Coq-HoTT from Aug 22, 2026.
 It likely works with Rocq 9.0.0 and Rocq 9.2.0.
 
