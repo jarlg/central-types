@@ -10,7 +10,7 @@ Open Scope pointed_scope.
 Open Scope trunc_scope.
 
 (** This should be done in AbGroups.Z. *)
-Notation ZZ := abgroup_Z.
+Abbreviation ZZ := abgroup_Z.
 
 (** The general situation involved in defining the Euler class:
 
